@@ -1,0 +1,24 @@
+{
+  "name": "nicetomeetyou",
+  "version": "1.0.0",
+  "description": "Nice To Meet You",
+  "main": "index.js",
+  "scripts": {
+    "server": "cd back-end && npm start",
+    "client": "cd front-end && npm start",
+    "start": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Code2Gether/NiceToMeetYou.git"
+  },
+  "author": "Suzy Nakayama and Roger Takeshita",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Code2Gether/NiceToMeetYou/issues"
+  },
+  "homepage": "https://github.com/Code2Gether/NiceToMeetYou#readme",
+  "devDependencies": {
+    "concurrently": "^5.3.0"
+  }
+}
