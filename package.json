@@ -4,7 +4,7 @@
   "description": "Nice To Meet You",
   "main": "index.js",
   "scripts": {
-    "server": "cd back-end && npm start",
+    "server": "cd back-end && npm start && tsc --w",
     "client": "cd front-end && npm start",
     "start": "concurrently \"npm run server\" \"npm run client\""
   },
