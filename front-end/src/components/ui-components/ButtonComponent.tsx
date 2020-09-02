@@ -9,6 +9,7 @@ const ButtonComponent: React.FC<ButtonProps> = ({
     disabled,
     color,
     bgColor,
+    onClick,
     children,
 }) => {
     return (
@@ -19,6 +20,7 @@ const ButtonComponent: React.FC<ButtonProps> = ({
             height={height}
             disabled={disabled}
             bgColor={bgColor}
+            onClick={onClick}
         >
             {children}
         </Button>

@@ -6,10 +6,11 @@ const InputComponent: React.FC<InputComponentProps> = ({
     name,
     type,
     placeholder,
+    onChange
 }) => {
     return (
         <>
-            <Input name={name} type={type} placeholder={placeholder} />
+            <Input name={name} type={type} placeholder={placeholder} onChange={onChange} />
             <Label>{placeholder}</Label>
         </>
     );

@@ -1,4 +1,9 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent, FormEvent, MouseEvent } from "react";
+import InputComponent from '../../components/ui-components/InputComponent';
+import ButtonComponent from '../../components/ui-components/ButtonComponent';
+import { LoginTitle, LoginForm, LoginPage, LoginButtonContainer } from './Login.styles';
+import { theme } from '../../css/theme';
+import { Link } from 'react-router-dom';
 
 const Login: React.FC = () => {
     const initialState = {
@@ -15,32 +20,45 @@ const Login: React.FC = () => {
         });
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = (evt: FormEvent | MouseEvent) => {
+        evt.preventDefault();
         //handle the submit to DB
-        console.log('submited', form);
+        console.log("submit", form);
     };
 
     return (
-        <div>
-            <h1>Login</h1>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    {' '}
-                    Email
-                    <input type="email" name="email" onChange={handleChange} />
-                </label>
-                <label>
-                    {' '}
-                    Password
-                    <input
-                        type="password"
-                        name="password"
-                        onChange={handleChange}
-                    />
-                </label>
-                <button onClick={handleSubmit}>Submit</button>
-            </form>
-        </div>
+        <LoginPage>
+            <LoginTitle>Login</LoginTitle>
+            <LoginForm onSubmit={handleSubmit}>
+                <InputComponent onChange={handleChange} name='email' type='text' placeholder='Email'/>
+                <InputComponent onChange={handleChange} name='password' type='password' placeholder='Password' />
+                <LoginButtonContainer>
+                    <ButtonComponent
+                        fontSize={2}
+                        width={10}
+                        height={4}
+                        disabled={false}
+                        color={theme.colors.white}
+                        bgColor={theme.colors.green['400']}
+                        >
+                            <Link to='/signup'>
+                                Sign Up
+                            </Link>
+                    </ButtonComponent>
+                    <ButtonComponent
+                        fontSize={2}
+                        width={10}
+                        height={4}
+                        disabled={false}
+                        color={theme.colors.white}
+                        bgColor={theme.colors.green['100']}
+                        onClick={handleSubmit}
+                    >
+                                Submit
+                    </ButtonComponent>
+                </LoginButtonContainer>
+            </LoginForm>
+        </LoginPage>
     );
 };
 
