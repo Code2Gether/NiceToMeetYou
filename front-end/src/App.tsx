@@ -3,13 +3,15 @@ import Header from './components/Header/Header';
 import InputComponent from './components/ui-components/InputComponent';
 import ButtonComponent from './components/ui-components/ButtonComponent';
 import { Route, Switch } from 'react-router-dom';
+import { theme } from './css/theme';
+import Login from './pages/Login/Login';
 
 const App: React.FC = () => {
     return (
         <div className="App">
             <Header />
             <h1>Hello World</h1>
-            <InputComponent
+            {/* <InputComponent
                 name={'firstName'}
                 type={'text'}
                 placeholder={'First Name'}
@@ -23,14 +25,14 @@ const App: React.FC = () => {
                 name={'email'}
                 type={'text'}
                 placeholder={'E-mail'}
-            />
+            /> */}
             <ButtonComponent
                 fontSize={2}
                 width={10}
                 height={4}
                 disabled={false}
-                color={'white'}
-                bgColor={'red'}
+                color={theme.colors.white}
+                bgColor={theme.colors.red}
             >
                 Cancel
             </ButtonComponent>
@@ -39,11 +41,12 @@ const App: React.FC = () => {
                 width={10}
                 height={4}
                 disabled={false}
-                color={'white'}
-                bgColor={'green'}
+                color={theme.colors.white}
+                bgColor={theme.colors.green['300']}
             >
                 OK
             </ButtonComponent>
+            <Login/>
         </div>
     );
 };

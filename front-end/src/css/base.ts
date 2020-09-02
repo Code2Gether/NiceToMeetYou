@@ -25,7 +25,7 @@ time, mark, audio, video {
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
-  display: block;
+    display: block;
 }
 body {
     line-height: 1;
@@ -46,8 +46,8 @@ table {
     border-spacing: 0;
 }
 *, *:focus {
-  outline: none !important;
-  box-sizing: inherit;
+    outline: none !important;
+    box-sizing: inherit;
 }
 html {
     font-size: 62.5%;
@@ -61,6 +61,7 @@ body, #app {
 a {
     text-decoration: none;
     cursor: pointer;
+    color: inherit;
 }
 button {
     border: none;

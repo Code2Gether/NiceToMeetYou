@@ -1,4 +1,5 @@
-import { HTMLAttributes } from 'react';
+import { HTMLAttributes, ChangeEvent } from 'react';
+import { Color } from './cssTypes';
 
 export interface SignUpForm {
     firstName: string;
@@ -12,6 +13,7 @@ export interface InputComponentProps {
     name: string;
     type: string;
     placeholder: string;
+    onChange: (evt: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
@@ -19,6 +21,6 @@ export interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
     width?: number;
     height?: number;
     disabled?: boolean;
-    color?: string;
-    bgColor?: string;
+    color?: string | Color;
+    bgColor?: string | Color;
 }
