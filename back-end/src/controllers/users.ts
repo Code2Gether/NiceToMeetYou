@@ -1,15 +1,17 @@
+import { RequestHandler } from 'express';
 import { User } from '../models/user';
 import { createJWT } from '../middlewares/auth';
 import { isEmail } from 'validator';
+import { LoginForm, SignUpForm, UserType } from '../utils/types';
 
-const loginUser = async (req, res) => {
-    const form = req.body;
+const loginUser: RequestHandler = async (req, res) => {
+    const form: LoginForm = req.body;
 
     if (!isEmail(form.email) || form.password.length < 7)
         return res.status(400).json({ message: 'Invalid credentials' });
 
     try {
-        const user = await User.findOne({ email: form.email });
+        const user: UserType = await User.findOne({ email: form.email });
         if (!user) return res.status(404).json({ message: 'User not found' });
         user.comparePassword(form.password, async (error, isMatch) => {
             if (isMatch) {
@@ -23,8 +25,8 @@ const loginUser = async (req, res) => {
     }
 };
 
-const signUpUser = async (req, res) => {
-    const form = req.body;
+const signUpUser: RequestHandler = async (req, res) => {
+    const form: SignUpForm = req.body;
     if (
         !form.firstName ||
         !form.lastName ||
@@ -34,11 +36,11 @@ const signUpUser = async (req, res) => {
         return res.status(400).json({ message: 'Invalid credentials' });
 
     try {
-        const user = await User.findOne({ email: form.email });
+        const user: UserType = await User.findOne({ email: form.email });
         if (user)
             return res.status(400).json({ message: 'Email already taken' });
         delete form.confirmPassword;
-        const newUser = await new User(form);
+        const newUser: UserType = await new User(form);
         await newUser.save();
         const token = await createJWT(newUser);
         res.status(201).json(token);
@@ -47,15 +49,15 @@ const signUpUser = async (req, res) => {
     }
 };
 
-const userProfile = async (req, res) => {
+const userProfile: RequestHandler = async (req, res) => {
     return res.json('user profile');
 };
 
-const deleteProfile = async (req, res) => {
+const deleteProfile: RequestHandler = async (req, res) => {
     return res.json('delete profile');
 };
 
-const updateProfile = async (req, res) => {
+const updateProfile: RequestHandler = async (req, res) => {
     return res.json('update profile');
 };
 

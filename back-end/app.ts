@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import logger from 'morgan';
 
 require('./src/config/database');
@@ -9,7 +9,7 @@ app.use(express.json());
 
 app.use('/api/users', require('./src/routes/users'));
 
-app.get('/*', (req, res) => {
+app.get('/*', (req: Request, res: Response) => {
     res.status(404).json({ message: "Path doesn't exist" });
 });
 

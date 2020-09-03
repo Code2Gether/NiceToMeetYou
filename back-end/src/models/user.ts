@@ -1,21 +1,21 @@
 import mongoose from 'mongoose';
 import * as validator from 'validator';
-import * as bcrypt from "bcrypt";
+import * as bcrypt from 'bcrypt';
 
 const Schema = mongoose.Schema;
-const SALT_ROUNDS = 6;
+const SALT_ROUNDS: number = 6;
 
 const userSchema = new Schema(
     {
         firstName: {
             type: String,
             required: true,
-            trim: true
+            trim: true,
         },
         lastName: {
             type: String,
             required: true,
-            trim: true
+            trim: true,
         },
         email: {
             type: String,
@@ -27,7 +27,7 @@ const userSchema = new Schema(
                 if (!(await validator.isEmail(value))) {
                     throw new Error('Email is invalid');
                 }
-            }
+            },
         },
         password: {
             type: String,
@@ -38,32 +38,22 @@ const userSchema = new Schema(
                 if (value.toLowerCase().includes('password')) {
                     throw new Error('Password cannot contain "password"');
                 }
-            }
+            },
         },
         admin: {
             type: Boolean,
-            default: false
-        }
+            default: false,
+        },
     },
     {
-        timestamps: true
+        timestamps: true,
     }
 );
 
-// userSchema.pre('save', async (next) => {
-//     const user = this;
-//     console.log(user)
-//     if (!user.isModified("password")) return next();
-//     bcrypt.hash(user.password, SALT_ROUNDS, function(err, hash) {
-//         if (err) return next(err);
-//         user.password = hash;
-//         next();
-//     });
-// });
-
 userSchema.pre('save', async function (next) {
     const user = this;
-    if (user.isModified('password')) user.password = await bcrypt.hash(user.password, SALT_ROUNDS);
+    if (user.isModified('password'))
+        user.password = await bcrypt.hash(user.password, SALT_ROUNDS);
     next();
 });
 
@@ -79,7 +69,7 @@ userSchema.set('toJSON', {
         delete ret.updatedAt;
         delete ret.__v;
         return ret;
-    }
+    },
 });
 
-export const User = mongoose.model("User", userSchema);
+export const User = mongoose.model('User', userSchema);
