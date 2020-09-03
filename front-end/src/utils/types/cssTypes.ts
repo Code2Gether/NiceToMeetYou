@@ -58,6 +58,10 @@ declare module 'styled-components' {
             large: string;
         };
         borders: { main: string };
-        shadows: { main: string };
+        shadows: {
+            main: string;
+            button: string;
+            buttonClick: string;
+        };
     }
 }

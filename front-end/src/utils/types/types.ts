@@ -1,12 +1,25 @@
 import { HTMLAttributes, ChangeEvent } from 'react';
 import { Color } from './cssTypes';
 
-export interface SignUpForm {
+export interface SignUpProps {
+    signUpUser: (data: SignUpFormProps) => void;
+}
+
+export interface SignUpFormProps {
     firstName: string;
     lastName: string;
     email: string;
     password: string;
     confirmPassword: string;
+}
+
+export interface LoginProps {
+    loginUser: (data: LoginFormProps) => void;
+}
+
+export interface LoginFormProps {
+    email: string;
+    password: string;
 }
 
 export interface InputComponentProps {
@@ -23,4 +36,37 @@ export interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
     disabled?: boolean;
     color?: string | Color;
     bgColor?: string | Color;
+}
+
+export interface UserReducer {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+}
+
+export interface UserProps {
+    firstName: string;
+    lastName: string;
+}
+
+export interface AppProps {
+    user: UserProps;
+    setUser: (data: UserReducer) => void;
+}
+
+export interface apiRequestHelperProps {
+    type: string;
+    url: string;
+    data?: {};
+}
+
+export interface OptionProps {
+    method: string;
+    headers: {
+        'Content-Type': string;
+        Authorization: string;
+    };
+    body?: any;
 }

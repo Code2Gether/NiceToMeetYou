@@ -61,5 +61,7 @@ export const theme: DefaultTheme = {
     },
     shadows: {
         main: `0 4px 10px rgba(0,0,0,0.5)`,
+        button: `0 0.5rem 1.5rem rgba(0,0,0,0.5)`,
+        buttonClick: `0 0.2rem 1rem rgba(0,0,0,0.5)`,
     },
 };
