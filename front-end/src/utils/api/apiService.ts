@@ -16,7 +16,7 @@ async function apiRequestHelper<T>(
     if (data && type !== 'GET') option.body = JSON.stringify(data);
     const response = await fetch(url, option);
     const dataResponse = await response.json();
-    if (dataResponse.ok) return dataResponse;
+    if (!dataResponse.message) return dataResponse;
     throw new Error(dataResponse.message);
 }
 

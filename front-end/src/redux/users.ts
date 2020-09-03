@@ -18,9 +18,8 @@ export const removeUser: ActionCreator<Action> = () => ({
 export const loginUser = (data: LoginFormProps) => {
     return async (dispatch: any) => {
         try {
-            console.log('login');
             const token = await reqService.loginUser('/api/users/login', data);
-            await tokenService.setToken(token);
+            tokenService.setToken(token);
 
             dispatch({
                 type: LOGIN_USER,
@@ -34,7 +33,10 @@ export const loginUser = (data: LoginFormProps) => {
 export const signUpUser = (data: SignUpFormProps) => {
     return async (dispatch: Dispatch) => {
         try {
-            const token = await reqService.signUpUser('/api/users/signup', data);
+            const token = await reqService.signUpUser(
+                '/api/users/signup',
+                data
+            );
             await tokenService.setToken(token);
 
             dispatch({

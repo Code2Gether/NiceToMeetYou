@@ -54,6 +54,7 @@ export interface UserProps {
 
 export interface AppProps {
     user: UserProps;
+    removeUser: () => void;
     setUser: (data: UserReducer) => void;
 }
 

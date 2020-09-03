@@ -8,6 +8,7 @@ const Header: React.FC = () => {
             <div>
                 <NavLink>Sign Up</NavLink>
                 <NavLink>Login</NavLink>
+                <NavLink>Logout</NavLink>
             </div>
         </Nav>
     );
