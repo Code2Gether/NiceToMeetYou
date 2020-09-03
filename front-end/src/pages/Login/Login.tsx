@@ -43,14 +43,16 @@ const Login: React.FC<LoginProps> = ({ loginUser }) => {
                 <InputComponent
                     onChange={handleChange}
                     name="email"
-                    type="text"
+                    type="email"
                     placeholder="Email"
+                    required={true}
                 />
                 <InputComponent
                     onChange={handleChange}
                     name="password"
                     type="password"
                     placeholder="Password"
+                    required={true}
                 />
                 <LoginButtonContainer>
                     <ButtonComponent

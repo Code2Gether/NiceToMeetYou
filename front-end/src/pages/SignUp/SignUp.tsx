@@ -44,30 +44,35 @@ const SignUp: React.FC<SignUpProps> = ({ signUpUser }) => {
                     name="firstName"
                     type="text"
                     placeholder="First Name"
+                    required={true}
                 />
                 <InputComponent
                     onChange={handleChange}
                     name="lastName"
                     type="text"
                     placeholder="Last Name"
+                    required={true}
                 />
                 <InputComponent
                     onChange={handleChange}
                     name="email"
-                    type="text"
+                    type="email"
                     placeholder="Email"
+                    required={true}
                 />
                 <InputComponent
                     onChange={handleChange}
                     name="password"
                     type="password"
                     placeholder="Password"
+                    required={true}
                 />
                 <InputComponent
                     onChange={handleChange}
                     name="confirmPassword"
                     type="password"
                     placeholder="Confirm Password"
+                    required={true}
                 />
                 <SignUpButtonContainer>
                     <ButtonComponent

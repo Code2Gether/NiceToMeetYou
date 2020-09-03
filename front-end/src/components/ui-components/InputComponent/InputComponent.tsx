@@ -7,7 +7,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
     type,
     placeholder,
     onChange,
-    // required
+    required
 }) => {
     return (
         <>
@@ -16,7 +16,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
                 type={type}
                 placeholder={placeholder}
                 onChange={onChange}
-                // required={required}
+                required={required}
             />
             <Label>{placeholder}</Label>
         </>

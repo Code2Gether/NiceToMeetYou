@@ -1,4 +1,4 @@
-import { HTMLAttributes, ChangeEvent } from 'react';
+import React, { HTMLAttributes, ChangeEvent } from 'react';
 import { Color } from './cssTypes';
 
 export interface SignUpProps {
@@ -26,6 +26,7 @@ export interface InputComponentProps {
     name: string;
     type: string;
     placeholder: string;
+    required: boolean;
     onChange: (evt: ChangeEvent<HTMLInputElement>) => void;
 }
 
