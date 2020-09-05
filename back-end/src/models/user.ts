@@ -29,6 +29,11 @@ const userSchema = new Schema(
                 }
             },
         },
+        token: String,
+        isVerified: {
+            type: Boolean,
+            default: false,
+        },
         password: {
             type: String,
             required: true,
