@@ -18,6 +18,7 @@
     },
     "homepage": "https://github.com/Code2Gether/NiceToMeetYou#readme",
     "dependencies": {
+        "@sendgrid/mail": "^7.2.5",
         "@types/socket.io": "^2.1.11",
         "bcrypt": "^5.0.0",
         "env-cmd": "^10.1.0",

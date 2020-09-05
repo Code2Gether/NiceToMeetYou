@@ -18,6 +18,8 @@ export interface UserType extends LoginForm {
     ) => void;
     save: () => void;
     _id?: string;
+    token?: string | null;
+    isVerified?: boolean;
 }
 
 export interface SignUpForm extends UserType {
