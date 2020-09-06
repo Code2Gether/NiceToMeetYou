@@ -6,7 +6,7 @@ const router = express.Router();
 //! Public route
 router.post('/signup', userCtrl.signUpUser);
 router.post('/login', userCtrl.loginUser);
-router.post('/verify-email/:emailTokenId', userCtrl.verifyEmail);
+router.get('/verify-email/:emailTokenId', userCtrl.verifyEmail);
 router.post('/verify-email/resend', userCtrl.resendVerifyEmail);
 
 //! Private Route
