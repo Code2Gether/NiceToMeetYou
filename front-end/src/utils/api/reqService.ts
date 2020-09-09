@@ -17,9 +17,8 @@ function loginUser(url: string, data: {}) {
     return apiRequestHelper<apiRequestHelperProps>('POST', url, data);
 }
 
-function signUpUser(url: string, data: {}) {
-    console.log(url, data);
-    return apiRequestHelper<apiRequestHelperProps>('POST', url, data);
+async function signUpUser(url: string, data: {}) {
+    return await apiRequestHelper<apiRequestHelperProps>('POST', url, data);
 }
 
 export default {

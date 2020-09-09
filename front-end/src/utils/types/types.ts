@@ -11,6 +11,7 @@ export interface SignUpFormProps {
     email: string;
     password: string;
     confirmPassword: string;
+    message: string;
 }
 
 export interface LoginProps {

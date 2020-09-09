@@ -10,16 +10,16 @@ import {
 } from './SignUp.styles';
 import { theme } from '../../css/theme';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { signUpUser } from '../../redux/users';
+import { signUpUser } from '../../utils/api/userService';
 
-const SignUp: React.FC<SignUpProps> = ({ signUpUser }) => {
+const SignUp: React.FC = () => {
     const [form, setForm] = useState<SignUpFormProps>({
         firstName: '',
         lastName: '',
         email: '',
         password: '',
         confirmPassword: '',
+        message: '',
     });
 
     const handleChange = (evt: ChangeEvent<HTMLInputElement>) => {
@@ -29,10 +29,24 @@ const SignUp: React.FC<SignUpProps> = ({ signUpUser }) => {
         });
     };
 
-    const handleSubmit = (evt: FormEvent | MouseEvent) => {
+    const handleSubmit = async (evt: FormEvent | MouseEvent) => {
         evt.preventDefault();
-        signUpUser(form);
-        // console.log('submit', form);
+        try {
+            const response = await signUpUser(form);
+            setForm({
+                firstName: '',
+                lastName: '',
+                email: '',
+                password: '',
+                confirmPassword: '',
+                message: response.message,
+            });
+        } catch (error) {
+            setForm({
+                ...form,
+                message: error.message,
+            });
+        }
     };
 
     return (
@@ -98,12 +112,9 @@ const SignUp: React.FC<SignUpProps> = ({ signUpUser }) => {
                     </ButtonComponent>
                 </SignUpButtonContainer>
             </SignUpForm>
+            <div>{form.message}</div>
         </SignUpPage>
     );
 };
 
-const mapDispatchToProps = (dispatch: any) => ({
-    signUpUser: (data: SignUpFormProps) => dispatch(signUpUser(data)),
-});
-
-export default connect(null, mapDispatchToProps)(SignUp);
+export default SignUp;

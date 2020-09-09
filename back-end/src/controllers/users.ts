@@ -8,7 +8,7 @@ import * as crypto from 'crypto';
 
 sgMail.setApiKey(process.env.SEND_GRID_KEY);
 
-const createMsg = (user, host, token) => {
+const createMsg = (user, host) => {
     return {
         from: process.env.SEND_GRID_EMAIL,
         to: user.email,
@@ -16,7 +16,7 @@ const createMsg = (user, host, token) => {
         html: `
                 <h1>Hello ${user.firstName}</h1>
                 <p>Thanks for registering on our website.</p>
-                <a href="http://${host}/api/users/verify-email/${token}">Click here to verify</a>
+                <a href="http://${host}/api/users/verify-email/${user.token}">Click here to verify</a>
             `,
     };
 };
@@ -50,7 +50,7 @@ const resendVerifyEmail: RequestHandler = async (req, res) => {
         if (!user) return res.status(404).json({ message: 'User not found' });
         if (user.isVerified)
             return res.json({ message: 'Your account is already verified.' });
-        const msg = createMsg(user, req.headers.host, user.token);
+        const msg = createMsg(user, req.headers.host);
         await sgMail.send(msg);
 
         // TODO remove emailToken from testing
@@ -108,17 +108,13 @@ const signUpUser: RequestHandler = async (req, res) => {
         form.token = crypto.randomBytes(64).toString('hex');
         const newUser: UserType = await new User(form);
         await newUser.save();
-        const msg = createMsg(newUser, req.headers.host, form.token);
-        try {
-            await sgMail.send(msg);
-            // TODO remove emailToken from testing
-            res.status(205).json({
-                message: 'Please check your email to verify your account.',
-                emailToken: form.token,
-            });
-        } catch (error) {
-            res.status(500).json({ message: 'Something went wrong', error });
-        }
+        const msg = createMsg(newUser, req.headers.host);
+        await sgMail.send(msg);
+        // TODO remove emailToken from testing
+        res.status(201).json({
+            message: 'Please check your email to verify your account.',
+            emailToken: newUser.token,
+        });
     } catch (error) {
         res.status(500).json({ message: 'Something went wrong', error });
     }
