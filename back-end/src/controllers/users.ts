@@ -31,8 +31,9 @@ const verifyEmail: RequestHandler = async (req, res) => {
         user.token = null;
         user.isVerified = true;
         await user.save();
-        const token = await createJWT(user);
-        res.json(token);
+        res.sendFile('index.html', {
+            root: './src/views'
+        });
     } catch (error) {
         res.status(500).json({
             message: 'Something went wrong with the account authentication.',

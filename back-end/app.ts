@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import path from 'path';
 import logger from 'morgan';
 
 require('./src/config/database');
@@ -13,6 +14,9 @@ const peerServer = ExpressPeerServer(http, {
 app.use('/peerjs', peerServer);
 app.use(logger('dev'));
 app.use(express.json());
+
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "html");
 
 app.use('/api/users', require('./src/routes/users'));
 app.use('/api/rooms', require('./src/routes/rooms'));

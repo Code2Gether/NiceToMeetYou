@@ -17,6 +17,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
                 placeholder={placeholder}
                 onChange={onChange}
                 required={required}
+                autoComplete='off'
             />
             <Label>{placeholder}</Label>
         </>
