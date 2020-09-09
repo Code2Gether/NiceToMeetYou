@@ -18,7 +18,6 @@ const ModalComponent: React.FC<ModalProps> = ({
     const handleChange = ({
         target: { name, value },
     }: ChangeEvent<HTMLInputElement>) => {
-        setEmail(value);
     };
 
     return (

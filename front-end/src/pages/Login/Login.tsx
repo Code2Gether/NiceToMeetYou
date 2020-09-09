@@ -20,6 +20,7 @@ import { resendVerifyEmail } from '../../utils/api/userService';
 
 const Login: React.FC<LoginProps> = ({ loginUser }) => {
     const history = useHistory();
+    const [showMsg, setShowMsg] = useState<boolean>(false);
     const [resend, setResend] = useState<boolean>(false);
     const [open, setOpen] = useState<boolean>(false);
     const [form, setForm] = useState<LoginFormProps>({
@@ -31,7 +32,7 @@ const Login: React.FC<LoginProps> = ({ loginUser }) => {
 
     useEffect(() => {
         setTimeout(() => {
-            setForm({ ...form, message: '', errorFlag: false });
+            setShowMsg(false);
         }, 10000);
     }, [form.message]);
 
@@ -50,12 +51,14 @@ const Login: React.FC<LoginProps> = ({ loginUser }) => {
             await loginUser(form);
 
             setForm({ email: '', password: '', message: '', errorFlag: false });
+            setShowMsg(true);
             history.push('/');
         } catch (error) {
             if (error.message.slice(0, 6) === 'Please') {
                 setResend(true);
             }
             setForm({ ...form, message: error.message, errorFlag: true });
+            setShowMsg(true);
         }
     };
 
@@ -117,7 +120,7 @@ const Login: React.FC<LoginProps> = ({ loginUser }) => {
                     </ButtonComponent>
                 </ButtonWrapper>
             </LoginForm>
-            {form.message !== '' && (
+            {showMsg && (
                 <ErrorMessage
                     msg={form.message}
                     iconType={resend ? 'envelope' : 'exclamation-triangle'}

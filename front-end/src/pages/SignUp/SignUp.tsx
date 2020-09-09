@@ -8,6 +8,7 @@ import React, {
 import InputComponent from '../../components/ui-components/InputComponent/InputComponent';
 import ButtonComponent from '../../components/ui-components/ButtonComponent/ButtonComponent';
 import ButtonWrapper from '../../components/ui-components/ButtonWrapper/ButtonWrapper';
+import ErrorMessage from "../../components/ui-components/ErrorMessage/ErrorMessage";
 import { SignUpFormProps } from '../../utils/types/types';
 import { SignUpPage, SignUpTitle, SignUpForm } from './SignUp.styles';
 import { theme } from '../../css/theme';
@@ -15,6 +16,7 @@ import { Link } from 'react-router-dom';
 import { signUpUser } from '../../utils/api/userService';
 
 const SignUp: React.FC = () => {
+    const [showMsg, setShowMsg] = useState<boolean>(false);
     const [form, setForm] = useState<SignUpFormProps>({
         firstName: '',
         lastName: '',
@@ -27,7 +29,7 @@ const SignUp: React.FC = () => {
 
     useEffect(() => {
         setTimeout(() => {
-            setForm({ ...form, message: '', errorFlag: false });
+            setShowMsg(false);
         }, 10000);
     }, [form.message]);
 
@@ -53,12 +55,14 @@ const SignUp: React.FC = () => {
                 message: response.message,
                 errorFlag: false,
             });
+            setShowMsg(true)
         } catch (error) {
             setForm({
                 ...form,
                 message: error.message,
                 errorFlag: true,
             });
+            setShowMsg(true);
         }
     };
 
@@ -127,7 +131,13 @@ const SignUp: React.FC = () => {
                     </ButtonComponent>
                 </ButtonWrapper>
             </SignUpForm>
-            <div>{form.message}</div>
+            {showMsg && (
+                <ErrorMessage
+                    msg={form.message}
+                    iconType={!form.errorFlag ? 'envelope' : 'exclamation-triangle'}
+                    color={theme.colors.red}
+                />
+            )}
         </SignUpPage>
     );
 };

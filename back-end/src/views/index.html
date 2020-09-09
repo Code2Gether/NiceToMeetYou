@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification</title>
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: inherit;
+        }
+
+        html {
+            font-size: 62.5%;
+            font-family: sans-serif;
+            box-sizing: border-box;
+        }
+
+        .verify__container {
+            margin: 30rem auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            width: fit-content;
+            height: 30rem;
+            padding: 4rem 6rem;
+            border: 1px solid #000;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .verify__title {
+            font-size: 2.4rem;
+        }
+
+        .verify__text {
+            font-size: 1.6rem;
+        }
+
+        .verify__text > span {
+            color: rgb(62, 117, 45);
+            font-weight: bold;
+        }
+
+        .verify__link {
+            background: rgb(62, 117, 45);
+            color: #fff;
+            width: fit-content;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 8px;
+            padding: 1rem 1.3rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: all 300ms ease-in-out;
+        }
+
+        .verify__link:hover {
+            transform: scale(1.1);
+        }
+
+        .verify__link:focus {
+            outline: none;
+            background: #fff;
+            border: 1px solid rgb(62, 117, 45);
+            color: rgb(62, 117, 45);
+        }
+    </style>
+</head>
+<body>
+    <div class='verify__container'>
+        <h2 class='verify__title'>Thank you! Your email was verified!</h2>
+        <p class='verify__text'>Please click on the button below to be redirected to <span>Nice2MeetU</span>.</p>
+        <a href='http://127.0.0.1:3000/login' class='verify__link'>Login</a>
+    </div>
+</body>
+</html>
