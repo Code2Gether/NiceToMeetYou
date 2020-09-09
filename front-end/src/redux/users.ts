@@ -1,10 +1,6 @@
-import {
-    UserReducer,
-    LoginFormProps,
-    SignUpFormProps,
-} from '../utils/types/types';
+import { UserReducer, LoginFormProps } from '../utils/types/types';
 import tokenService from '../utils/api/tokenService';
-import { Action, ActionCreator, Dispatch } from 'redux';
+import { Action, ActionCreator } from 'redux';
 import reqService from '../utils/api/reqService';
 
 const REMOVE_USER = 'REMOVE_USER';
@@ -24,7 +20,7 @@ export const loginUser = (data: LoginFormProps) => {
                 type: LOGIN_USER,
             });
         } catch (error) {
-            console.log(error);
+            throw new Error(error.message);
         }
     };
 };

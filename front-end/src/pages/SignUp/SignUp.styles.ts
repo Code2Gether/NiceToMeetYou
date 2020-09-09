@@ -19,9 +19,3 @@ export const SignUpTitle = styled.h1`
 export const SignUpForm = styled.form`
     width: 50%;
 `;
-
-export const SignUpButtonContainer = styled.div`
-    display: flex;
-    justify-content: space-around;
-    margin-top: ${({ theme }) => theme.sizes['xbig']};
-`;

@@ -1,13 +1,15 @@
-import React, { useState, ChangeEvent, FormEvent, MouseEvent } from 'react';
+import React, {
+    useState,
+    ChangeEvent,
+    FormEvent,
+    MouseEvent,
+    useEffect,
+} from 'react';
 import InputComponent from '../../components/ui-components/InputComponent/InputComponent';
 import ButtonComponent from '../../components/ui-components/ButtonComponent/ButtonComponent';
-import { SignUpFormProps, SignUpProps } from '../../utils/types/types';
-import {
-    SignUpPage,
-    SignUpTitle,
-    SignUpForm,
-    SignUpButtonContainer,
-} from './SignUp.styles';
+import ButtonWrapper from '../../components/ui-components/ButtonWrapper/ButtonWrapper';
+import { SignUpFormProps } from '../../utils/types/types';
+import { SignUpPage, SignUpTitle, SignUpForm } from './SignUp.styles';
 import { theme } from '../../css/theme';
 import { Link } from 'react-router-dom';
 import { signUpUser } from '../../utils/api/userService';
@@ -20,12 +22,21 @@ const SignUp: React.FC = () => {
         password: '',
         confirmPassword: '',
         message: '',
+        errorFlag: false,
     });
 
-    const handleChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    useEffect(() => {
+        setTimeout(() => {
+            setForm({ ...form, message: '', errorFlag: false });
+        }, 10000);
+    }, [form.message]);
+
+    const handleChange = ({
+        target: { name, value },
+    }: ChangeEvent<HTMLInputElement>) => {
         setForm({
             ...form,
-            [evt.target.name]: evt.target.value,
+            [name]: value,
         });
     };
 
@@ -40,11 +51,13 @@ const SignUp: React.FC = () => {
                 password: '',
                 confirmPassword: '',
                 message: response.message,
+                errorFlag: false,
             });
         } catch (error) {
             setForm({
                 ...form,
                 message: error.message,
+                errorFlag: true,
             });
         }
     };
@@ -88,17 +101,19 @@ const SignUp: React.FC = () => {
                     placeholder="Confirm Password"
                     required={true}
                 />
-                <SignUpButtonContainer>
-                    <ButtonComponent
-                        fontSize={2}
-                        width={10}
-                        height={4}
-                        disabled={false}
-                        color={theme.colors.white}
-                        bgColor={theme.colors.green['400']}
-                    >
-                        <Link to="/login">Login</Link>
-                    </ButtonComponent>
+                <ButtonWrapper>
+                    <Link to="/login">
+                        <ButtonComponent
+                            fontSize={2}
+                            width={10}
+                            height={4}
+                            disabled={false}
+                            color={theme.colors.white}
+                            bgColor={theme.colors.green['400']}
+                        >
+                            Login
+                        </ButtonComponent>
+                    </Link>
                     <ButtonComponent
                         fontSize={2}
                         width={10}
@@ -110,7 +125,7 @@ const SignUp: React.FC = () => {
                     >
                         Submit
                     </ButtonComponent>
-                </SignUpButtonContainer>
+                </ButtonWrapper>
             </SignUpForm>
             <div>{form.message}</div>
         </SignUpPage>

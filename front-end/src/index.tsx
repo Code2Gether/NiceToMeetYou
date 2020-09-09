@@ -7,6 +7,7 @@ import { theme } from './css/theme';
 import { GlobalStyle } from './css/base';
 import { Provider } from 'react-redux';
 import store from './store';
+import './components/ui-components/FontAwesome/FontAwesome';
 
 ReactDOM.render(
     <React.StrictMode>

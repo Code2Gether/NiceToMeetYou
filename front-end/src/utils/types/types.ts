@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, ChangeEvent } from 'react';
+import { HTMLAttributes, ChangeEvent } from 'react';
 import { Color } from './cssTypes';
 
 export interface SignUpProps {
@@ -12,6 +12,7 @@ export interface SignUpFormProps {
     password: string;
     confirmPassword: string;
     message: string;
+    errorFlag: boolean;
 }
 
 export interface LoginProps {
@@ -21,6 +22,9 @@ export interface LoginProps {
 export interface LoginFormProps {
     email: string;
     password: string;
+    message: string;
+    errorFlag: boolean;
+    setUser?: (data: UserReducer) => void;
 }
 
 export interface InputComponentProps {
@@ -53,10 +57,9 @@ export interface UserProps {
     lastName: string;
 }
 
-export interface AppProps {
+export interface HeaderProps {
     user: UserProps;
     removeUser: () => void;
-    setUser: (data: UserReducer) => void;
 }
 
 export interface apiRequestHelperProps {
@@ -72,4 +75,22 @@ export interface OptionProps {
         Authorization: string;
     };
     body?: any;
+}
+
+export interface ModalProps {
+    text: string;
+    btnText: string;
+    handleCancel: () => void;
+    handleOk: (email: string) => void;
+    input: boolean;
+}
+
+export interface ButtonWrapperProps {
+    direction?: string;
+}
+
+export interface ErrorMessageProps {
+    msg?: string;
+    iconType?: any;
+    color?: string;
 }

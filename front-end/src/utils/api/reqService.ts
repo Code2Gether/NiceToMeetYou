@@ -21,10 +21,15 @@ async function signUpUser(url: string, data: {}) {
     return await apiRequestHelper<apiRequestHelperProps>('POST', url, data);
 }
 
+async function resendEmail(url: string, data: {}) {
+    return await apiRequestHelper<apiRequestHelperProps>('POST', url, data);
+}
+
 export default {
     getData,
     addData,
     deleteData,
     loginUser,
     signUpUser,
+    resendEmail,
 };

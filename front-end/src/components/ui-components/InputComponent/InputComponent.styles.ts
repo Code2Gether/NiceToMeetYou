@@ -26,6 +26,7 @@ export const Input = styled.input`
 
     &:placeholder-shown + ${Label} {
         opacity: 0;
+        width: 100%;
         visibility: hidden;
         transform: translateY(-4rem);
     }

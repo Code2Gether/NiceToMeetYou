@@ -8,7 +8,7 @@ export const LoginPage = styled.div`
 `;
 
 export const LoginTitle = styled.h1`
-    ${({theme}) => `
+    ${({ theme }) => `
     font-size: ${theme.sizes['xl']};
     font-family: ${theme.fontFamily['title']};
     letter-spacing: ${theme.letterSpacing['sm']};
@@ -18,10 +18,4 @@ export const LoginTitle = styled.h1`
 
 export const LoginForm = styled.form`
     width: 50%;
-`;
-
-export const LoginButtonContainer = styled.div`
-    display: flex;
-    justify-content: space-around;
-    margin-top: ${({theme}) => theme.sizes['xbig']};
 `;
