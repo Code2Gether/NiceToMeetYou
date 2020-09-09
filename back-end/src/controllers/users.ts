@@ -45,7 +45,6 @@ const resendVerifyEmail: RequestHandler = async (req, res) => {
     try {
         if (!isEmail(req.body.email))
             return res.status(400).json({ message: 'Invalid email' });
-
         const user: UserType = await User.findOne({ email: req.body.email });
         if (!user) return res.status(404).json({ message: 'User not found' });
         if (user.isVerified)
@@ -54,7 +53,7 @@ const resendVerifyEmail: RequestHandler = async (req, res) => {
         await sgMail.send(msg);
 
         // TODO remove emailToken from testing
-        return res.status(205).json({
+        return res.json({
             message: 'Please check your email to verify your account.',
             emailToken: user.token,
         });

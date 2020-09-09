@@ -7,7 +7,7 @@ const router = express.Router();
 router.post('/signup', userCtrl.signUpUser);
 router.post('/login', userCtrl.loginUser);
 router.get('/verify-email/:emailTokenId', userCtrl.verifyEmail);
-router.post('/verify-email/resend', userCtrl.resendVerifyEmail);
+router.post('/verify-email/resendEmailTokenId', userCtrl.resendVerifyEmail);
 
 //! Private Route
 router.get('/profile', authJWT, userCtrl.userProfile);
