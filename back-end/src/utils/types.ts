@@ -7,6 +7,7 @@ declare module 'express-serve-static-core' {
 export interface LoginForm {
     email: string;
     password: string;
+    _id?: string;
 }
 
 export interface UserType extends LoginForm {
