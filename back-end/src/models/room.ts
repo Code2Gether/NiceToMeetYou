@@ -17,7 +17,6 @@ const roomSchema = new Schema(
                 }
             },
         },
-        tempRoomId: String,
         admin: {
             type: Schema.Types.ObjectId,
             ref: 'User',

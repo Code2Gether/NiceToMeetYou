@@ -33,7 +33,6 @@ function userReducer(
         case LOGIN_USER:
             return tokenService.getUserFromToken();
         case REMOVE_USER:
-            tokenService.removeToken();
             return null;
         default:
             return state;
