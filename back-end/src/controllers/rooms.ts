@@ -16,7 +16,6 @@ const create: RequestHandler = async (req, res) => {
     res.status(201).json({ roomId: room._id });
 };
 
-// TODO change join logic to socketIo
 const join: RequestHandler = async (req, res) => {
     const roomId: string = req.params.roomId;
     const roomPassword: string = req.body.password;
@@ -47,7 +46,7 @@ const deleteRoom: RequestHandler = async (req, res) => {
     try {
         const room = await Room.findOne({ _id: roomId });
         if (!room) return res.status(404).json({ message: 'RoomId not found' });
-        if (`${room.admin}` === req.user._id) {
+        if (room.admin.toString() === req.user._id) {
             await room.remove();
             return res.json({ message: 'Room has been deleted.' });
         }

@@ -1,15 +1,17 @@
 import express, { Request, Response } from 'express';
 import path from 'path';
 import logger from 'morgan';
+import { peerServer } from './socket';
 
 require('./src/config/database');
 const app = express();
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
-const { ExpressPeerServer } = require('peer');
-const peerServer = ExpressPeerServer(http, {
-    debug: true,
-});
+require('./socket');
+// const http = require('http').Server(app);
+// const io = require('socket.io')(http);
+// const { ExpressPeerServer } = require('peer');
+// const peerServer = ExpressPeerServer(http, {
+//     debug: true,
+// });
 
 app.use('/peerjs', peerServer);
 app.use(logger('dev'));

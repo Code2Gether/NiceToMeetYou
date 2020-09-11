@@ -28,3 +28,19 @@ export interface SignUpForm extends UserType {
 }
 
 export type CreateJWTType = (user: UserType) => void;
+
+export interface User {
+    user: {
+        _id: string;
+        firstName: string;
+        lastName: string;
+    }
+}
+
+export interface SocketJoinDisconnect extends User {
+    roomId: string;
+}
+
+export interface SocketMessage extends User {
+    message: string;
+}
