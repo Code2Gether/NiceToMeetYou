@@ -1,5 +1,4 @@
 import { RequestHandler } from 'express';
-import mongoose from 'mongoose';
 import { Room } from '../models/room';
 
 const create: RequestHandler = async (req, res) => {
@@ -11,15 +10,15 @@ const create: RequestHandler = async (req, res) => {
     const room = await new Room({
         password,
         admin: req.user._id,
-        tempRoomId: mongoose.Types.ObjectId(),
     });
     await room.users.push(req.user._id);
     await room.save();
-    res.status(201).json({ tempRoomId: room.tempRoomId });
+    res.status(201).json({ roomId: room._id });
 };
 
+// TODO change join logic to socketIo
 const join: RequestHandler = async (req, res) => {
-    const tempRoomId: string = req.params.roomId;
+    const roomId: string = req.params.roomId;
     const roomPassword: string = req.body.password;
 
     try {
@@ -28,7 +27,7 @@ const join: RequestHandler = async (req, res) => {
             return res.status(400).json({
                 message: 'You cannot be in two rooms at the same time',
             });
-        const room = await Room.findOne({ tempRoomId });
+        const room = await Room.findOne({ roomId });
         room.comparePassword(roomPassword, async (error, isMatch) => {
             if (isMatch) {
                 await room.users.push(req.user._id);
