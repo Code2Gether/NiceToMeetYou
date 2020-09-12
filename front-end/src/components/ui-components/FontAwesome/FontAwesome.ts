@@ -7,6 +7,7 @@ import {
     faVideo,
     faVideoSlash,
     faTimesCircle,
+    faPaperPlane
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
@@ -16,5 +17,6 @@ library.add(
     faMicrophoneAltSlash,
     faVideo,
     faVideoSlash,
-    faTimesCircle
+    faTimesCircle,
+    faPaperPlane
 );

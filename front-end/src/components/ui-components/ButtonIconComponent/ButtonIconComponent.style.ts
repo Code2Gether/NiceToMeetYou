@@ -16,7 +16,7 @@ export const Button = styled.button<ButtonIconProps>`
             transform: scale(1.01) translateY(-0.3rem);
         }
         &:hover > * {
-                color: orangered;
+            color: ${props.hoverColor};
         }
         &:active {
             transform: translateY(-0.1rem);

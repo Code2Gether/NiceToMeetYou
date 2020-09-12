@@ -10,6 +10,7 @@ const ButtonIconComponent: React.FC<ButtonIconProps> = ({
     color,
     bgColor,
     onClick,
+    hoverColor,
     iconType,
 }) => {
     return (
@@ -19,8 +20,9 @@ const ButtonIconComponent: React.FC<ButtonIconProps> = ({
             disabled={disabled}
             bgColor={bgColor}
             onClick={onClick}
+            hoverColor={hoverColor}
         >
-            <Icon color={color} icon={iconType} fontSize={fontSize} />
+            <Icon color={color} icon={iconType} fontSize={fontSize}/>
         </Button>
     );
 };
