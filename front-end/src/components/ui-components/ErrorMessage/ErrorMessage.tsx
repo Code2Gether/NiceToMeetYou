@@ -1,5 +1,4 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ErrorMessageProps } from '../../../utils/types/types';
 import {
     ErrorMessageDiv,

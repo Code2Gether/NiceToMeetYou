@@ -7,7 +7,8 @@ const InputComponent: React.FC<InputComponentProps> = ({
     type,
     placeholder,
     onChange,
-    required
+    required,
+    label = true,
 }) => {
     return (
         <>
@@ -17,9 +18,9 @@ const InputComponent: React.FC<InputComponentProps> = ({
                 placeholder={placeholder}
                 onChange={onChange}
                 required={required}
-                autoComplete='off'
+                autoComplete="off"
             />
-            <Label>{placeholder}</Label>
+            {label && <Label>{placeholder}</Label>}
         </>
     );
 };

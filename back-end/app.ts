@@ -6,19 +6,13 @@ import { peerServer } from './socket';
 require('./src/config/database');
 const app = express();
 require('./socket');
-// const http = require('http').Server(app);
-// const io = require('socket.io')(http);
-// const { ExpressPeerServer } = require('peer');
-// const peerServer = ExpressPeerServer(http, {
-//     debug: true,
-// });
 
 app.use('/peerjs', peerServer);
 app.use(logger('dev'));
 app.use(express.json());
 
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "html");
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'html');
 
 app.use('/api/users', require('./src/routes/users'));
 app.use('/api/rooms', require('./src/routes/rooms'));

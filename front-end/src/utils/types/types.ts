@@ -32,6 +32,7 @@ export interface InputComponentProps {
     type: string;
     placeholder: string;
     required: boolean;
+    label?: boolean;
     onChange: (evt: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -42,6 +43,10 @@ export interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
     disabled?: boolean;
     color?: string | Color;
     bgColor?: string | Color;
+}
+
+export interface ButtonIconProps extends ButtonProps {
+    iconType?: any;
 }
 
 export interface UserReducer {
