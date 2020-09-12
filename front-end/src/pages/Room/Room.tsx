@@ -1,11 +1,15 @@
 import React from 'react';
-import {} from './Room.styles';
+import Chat from '../../components/Chat/Chat';
+import { RoomContainer, RoomVideoContainer, RoomVideo, RoomFooter, RoomHeader } from "./Room.styles";
 
 const Room: React.FC = () => {
     return (
-        <div>
-            <h1>Room</h1>
-        </div>
+        <RoomContainer>
+            <RoomHeader/>
+            <RoomVideoContainer>Room</RoomVideoContainer>
+            <RoomFooter/>
+            <Chat/>
+        </RoomContainer>
     );
 };
 
