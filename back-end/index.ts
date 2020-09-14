@@ -1,6 +1,6 @@
-import app from './app';
+import http from './app';
 const port = process.env.PORT || 3001;
 
-app.listen(port, () => {
+http.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
