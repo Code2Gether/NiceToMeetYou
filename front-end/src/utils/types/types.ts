@@ -61,6 +61,7 @@ export interface UserReducer {
 export interface UserProps {
     firstName: string;
     lastName: string;
+    _id: string;
 }
 
 export interface HeaderProps {
@@ -99,4 +100,22 @@ export interface ErrorMessageProps {
     msg?: string;
     iconType?: any;
     color?: string;
+}
+
+export interface ChatProps {
+    user: UserProps;
+}
+
+export interface Message {
+    user: string;
+    text: string;
+}
+
+export type ChatMessagesProps = Message[]
+
+export type ChatUsersProps = UserProps[]
+
+export interface ChatRoomData {
+    room: string;
+    users: ChatUsersProps;
 }
