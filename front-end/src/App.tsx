@@ -1,17 +1,18 @@
 import React from 'react';
 import Header from './components/Header/Header';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 import Login from './pages/Login/Login';
 import SignUp from './pages/SignUp/SignUp';
 import Home from './pages/Home/Home';
 import Room from './pages/Room/Room';
-import ButtonIconComponent from './components/ui-components/ButtonIconComponent/ButtonIconComponent';
-import { theme } from './css/theme';
 
 const App: React.FC = () => {
+    let location = useLocation();
+    const locationNow = location.pathname.split('/')[1];
+
     return (
         <div className="App">
-            <Header />
+            {locationNow !== 'rooms' && <Header />}
             <Switch>
                 <Route exact path="/" component={Home} />
                 <Route exact path="/login" component={Login} />
@@ -19,7 +20,7 @@ const App: React.FC = () => {
                 <Route exact path="/rooms/:id" component={Room} />
                 <Route render={() => <Redirect to={{ pathname: '/' }} />} />
             </Switch>
-            <footer>Não esquecer o pezinho</footer>
+            {locationNow !== 'rooms' && <footer>Não esquecer o pezinho</footer>}
         </div>
     );
 };

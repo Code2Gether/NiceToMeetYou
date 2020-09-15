@@ -27,7 +27,6 @@ const join: RequestHandler = async (req, res) => {
                 message: 'You cannot be in two rooms at the same time',
             });
         const room = await Room.findOne({ _id: roomId });
-        console.log(room)
         room.comparePassword(roomPassword, async (error, isMatch) => {
             if (isMatch) {
                 await room.users.push(req.user._id);

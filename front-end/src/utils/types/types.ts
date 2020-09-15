@@ -33,6 +33,7 @@ export interface InputComponentProps {
     placeholder: string;
     required?: boolean;
     label?: boolean;
+    value?: string;
     onChange: (evt: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -107,15 +108,21 @@ export interface ChatProps {
 }
 
 export interface Message {
+    userId?: string;
     user: string;
     text: string;
+    createdAt?: string;
 }
 
-export type ChatMessagesProps = Message[]
+export type ChatMessagesProps = Message[];
 
-export type ChatUsersProps = UserProps[]
+export type ChatUsersProps = UserProps[];
 
 export interface ChatRoomData {
     room: string;
     users: ChatUsersProps;
+}
+
+export interface ChatMessagesLiProps {
+    direction: string;
 }

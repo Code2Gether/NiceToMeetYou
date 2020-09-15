@@ -70,6 +70,7 @@ const Login: React.FC<LoginProps> = ({ loginUser }) => {
         try {
             await resendVerifyEmail({ email: email });
         } catch (error) {
+            // TODO Handle login error
             console.log(error);
         }
     };
@@ -85,6 +86,7 @@ const Login: React.FC<LoginProps> = ({ loginUser }) => {
                     name="email"
                     type="email"
                     placeholder="Email"
+                    value={form.email}
                     required={true}
                 />
                 <InputComponent
@@ -92,6 +94,7 @@ const Login: React.FC<LoginProps> = ({ loginUser }) => {
                     name="password"
                     type="password"
                     placeholder="Password"
+                    value={form.password}
                     required={true}
                 />
                 <ButtonWrapper>

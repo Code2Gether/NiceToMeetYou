@@ -8,6 +8,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
     placeholder,
     onChange,
     required,
+    value,
     label = true,
 }) => {
     return (
@@ -15,6 +16,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
             <Input
                 name={name}
                 type={type}
+                value={value}
                 placeholder={placeholder}
                 onChange={onChange}
                 required={required}

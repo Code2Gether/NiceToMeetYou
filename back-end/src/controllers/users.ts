@@ -32,7 +32,7 @@ const verifyEmail: RequestHandler = async (req, res) => {
         user.isVerified = true;
         await user.save();
         res.sendFile('index.html', {
-            root: './src/views'
+            root: './src/views',
         });
     } catch (error) {
         res.status(500).json({
@@ -53,10 +53,8 @@ const resendVerifyEmail: RequestHandler = async (req, res) => {
         const msg = createMsg(user, req.headers.host);
         await sgMail.send(msg);
 
-        // TODO remove emailToken from testing
         return res.json({
             message: 'Please check your email to verify your account.',
-            emailToken: user.token,
         });
     } catch (error) {
         res.status(500).json({ message: 'Something went wrong', error });
@@ -110,10 +108,8 @@ const signUpUser: RequestHandler = async (req, res) => {
         await newUser.save();
         const msg = createMsg(newUser, req.headers.host);
         await sgMail.send(msg);
-        // TODO remove emailToken from testing
         res.status(201).json({
             message: 'Please check your email to verify your account.',
-            emailToken: newUser.token,
         });
     } catch (error) {
         res.status(500).json({ message: 'Something went wrong', error });

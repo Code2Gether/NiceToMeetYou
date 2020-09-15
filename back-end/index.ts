@@ -1,4 +1,4 @@
-import http from './app';
+import { http } from './app';
 const port = process.env.PORT || 3001;
 
 http.listen(port, () => {

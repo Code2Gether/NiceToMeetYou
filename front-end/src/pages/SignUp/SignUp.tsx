@@ -8,7 +8,7 @@ import React, {
 import InputComponent from '../../components/ui-components/InputComponent/InputComponent';
 import ButtonComponent from '../../components/ui-components/ButtonComponent/ButtonComponent';
 import ButtonWrapper from '../../components/ui-components/ButtonWrapper/ButtonWrapper';
-import ErrorMessage from "../../components/ui-components/ErrorMessage/ErrorMessage";
+import ErrorMessage from '../../components/ui-components/ErrorMessage/ErrorMessage';
 import { SignUpFormProps } from '../../utils/types/types';
 import { SignUpPage, SignUpTitle, SignUpForm } from './SignUp.styles';
 import { theme } from '../../css/theme';
@@ -55,7 +55,7 @@ const SignUp: React.FC = () => {
                 message: response.message,
                 errorFlag: false,
             });
-            setShowMsg(true)
+            setShowMsg(true);
         } catch (error) {
             setForm({
                 ...form,
@@ -75,6 +75,7 @@ const SignUp: React.FC = () => {
                     name="firstName"
                     type="text"
                     placeholder="First Name"
+                    value={form.firstName}
                     required={true}
                 />
                 <InputComponent
@@ -82,6 +83,7 @@ const SignUp: React.FC = () => {
                     name="lastName"
                     type="text"
                     placeholder="Last Name"
+                    value={form.lastName}
                     required={true}
                 />
                 <InputComponent
@@ -89,6 +91,7 @@ const SignUp: React.FC = () => {
                     name="email"
                     type="email"
                     placeholder="Email"
+                    value={form.email}
                     required={true}
                 />
                 <InputComponent
@@ -96,6 +99,7 @@ const SignUp: React.FC = () => {
                     name="password"
                     type="password"
                     placeholder="Password"
+                    value={form.password}
                     required={true}
                 />
                 <InputComponent
@@ -103,6 +107,7 @@ const SignUp: React.FC = () => {
                     name="confirmPassword"
                     type="password"
                     placeholder="Confirm Password"
+                    value={form.confirmPassword}
                     required={true}
                 />
                 <ButtonWrapper>
@@ -134,7 +139,9 @@ const SignUp: React.FC = () => {
             {showMsg && (
                 <ErrorMessage
                     msg={form.message}
-                    iconType={!form.errorFlag ? 'envelope' : 'exclamation-triangle'}
+                    iconType={
+                        !form.errorFlag ? 'envelope' : 'exclamation-triangle'
+                    }
                     color={theme.colors.red}
                 />
             )}
