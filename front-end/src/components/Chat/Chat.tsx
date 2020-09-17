@@ -18,7 +18,6 @@ import {
     ChatMessagesLi,
 } from './Chat.styles';
 import { theme } from '../../css/theme';
-import io from 'socket.io-client';
 import { connect } from 'react-redux';
 import {
     Message,
@@ -28,12 +27,11 @@ import {
     ChatRoomData,
 } from '../../utils/types/types';
 
-const Chat: React.FC<ChatProps> = ({ user }) => {
+const Chat: React.FC<ChatProps> = ({ user, socket }) => {
     const socketRef: MutableRefObject<
         SocketIOClient.Socket | undefined
     > = useRef();
-    const params: { id: string } = useParams();
-    const roomId = params.id;
+    const { id: roomId }: { id: string } = useParams();
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState<ChatMessagesProps>([]);
     const [users, setUsers] = useState<ChatUsersProps>([]);
@@ -44,7 +42,7 @@ const Chat: React.FC<ChatProps> = ({ user }) => {
     };
 
     useEffect(() => {
-        socketRef.current = io.connect('/');
+        socketRef.current = socket;
         socketRef.current.emit('join', { user, roomId }, (error: any) => {
             if (error) {
                 setError(error);
@@ -54,6 +52,9 @@ const Chat: React.FC<ChatProps> = ({ user }) => {
 
     useEffect(() => {
         socketRef.current!.on('message', (message: Message) => {
+            setMessages((messages) => [...messages, message]);
+        });
+        socketRef.current!.on('user-connected', (message: Message) => {
             setMessages((messages) => [...messages, message]);
         });
 
@@ -77,12 +78,12 @@ const Chat: React.FC<ChatProps> = ({ user }) => {
         <ChatContainer>
             <ChatMessagesContainer>
                 <ChatMessagesUl>
-                    {messages.map((msg) => {
+                    {messages.map((msg, idx) => {
                         let direction = 'left';
                         if (msg.userId === user._id) {
                             direction = 'right';
                             return (
-                                <ChatMessagesLi direction={direction}>
+                                <ChatMessagesLi key={idx} direction={direction}>
                                     <p>
                                         {msg.user} [{msg.createdAt}]
                                     </p>
@@ -91,7 +92,7 @@ const Chat: React.FC<ChatProps> = ({ user }) => {
                             );
                         } else {
                             return (
-                                <ChatMessagesLi direction={direction}>
+                                <ChatMessagesLi key={idx} direction={direction}>
                                     <p>
                                         [{msg.createdAt}] {msg.user}
                                     </p>

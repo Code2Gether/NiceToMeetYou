@@ -105,6 +105,7 @@ export interface ErrorMessageProps {
 
 export interface ChatProps {
     user: UserProps;
+    socket: SocketIOClient.Socket;
 }
 
 export interface Message {

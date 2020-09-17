@@ -5,28 +5,29 @@ const io = require('socket.io')(http);
 
 io.on('connect', (socket) => {
     socket.on(
-        'join', async ({ user, roomId }: SocketJoinDisconnect, callback: (msg?: string) => void ) => {
+        'join',
+        async (
+            { user, roomId }: SocketJoinDisconnect,
+            callback: (msg?: string) => void
+        ) => {
             const room = await Room.findOne({ users: user._id }).populate(
                 'users'
-            )
+            );
 
             if (!room || room._id.toString() !== roomId)
                 return callback('Sorry! Room not found!');
 
             socket.join(room._id);
 
-            // broadcast
-            socket.to(room._id).emit('user-connected', {
+            socket.to(room._id).broadcast.emit('user-connected', {
                 text: `${user.firstName} ${user.lastName} has joined the room!`,
-                userId: user._id
+                userId: user._id,
             });
 
             io.to(room._id).emit('roomData', {
                 room: room._id,
                 users: room.users,
             });
-
-            // callback();
         }
     );
 
@@ -36,7 +37,8 @@ io.on('connect', (socket) => {
             const room = await Room.findOne({ users: user._id });
 
             const time = new Date();
-
+            console.log(room);
+            console.log(user);
             io.to(room._id).emit('message', {
                 userId: user._id,
                 user: `${user.firstName} ${user.lastName}`,
@@ -63,7 +65,7 @@ io.on('connect', (socket) => {
                 await room.save();
                 io.to(roomId).emit('user-disconnected', {
                     text: `${user.firstName} ${user.lastName} has left.`,
-                    userId: user._id
+                    userId: user._id,
                 });
             }
         } catch (error) {
