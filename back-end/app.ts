@@ -8,7 +8,7 @@ const app = express();
 export const http = require('http').Server(app);
 const { ExpressPeerServer } = require('peer');
 const peerServer = ExpressPeerServer(http, {
-    debug: true,
+    debug: true
 });
 
 app.use(cors());

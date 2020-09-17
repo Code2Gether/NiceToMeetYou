@@ -126,3 +126,7 @@ export interface ChatRoomData {
 export interface ChatMessagesLiProps {
     direction: string;
 }
+
+export interface RoomProps {
+    user: UserProps;
+}

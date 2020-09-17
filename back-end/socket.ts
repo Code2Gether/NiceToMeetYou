@@ -5,22 +5,20 @@ const io = require('socket.io')(http);
 
 io.on('connect', (socket) => {
     socket.on(
-        'join',
-        async (
-            { user, roomId }: SocketJoinDisconnect,
-            callback: (msg?: string) => void
-        ) => {
+        'join', async ({ user, roomId }: SocketJoinDisconnect, callback: (msg?: string) => void ) => {
             const room = await Room.findOne({ users: user._id }).populate(
                 'users'
-            );
+            )
 
             if (!room || room._id.toString() !== roomId)
                 return callback('Sorry! Room not found!');
 
             socket.join(room._id);
 
-            socket.broadcast.to(room._id).emit('message', {
+            // broadcast
+            socket.to(room._id).emit('user-connected', {
                 text: `${user.firstName} ${user.lastName} has joined the room!`,
+                userId: user._id
             });
 
             io.to(room._id).emit('roomData', {
@@ -28,7 +26,7 @@ io.on('connect', (socket) => {
                 users: room.users,
             });
 
-            callback();
+            // callback();
         }
     );
 
@@ -63,8 +61,9 @@ io.on('connect', (socket) => {
                 );
                 await userDoc.remove();
                 await room.save();
-                io.to(roomId).emit('message', {
+                io.to(roomId).emit('user-disconnected', {
                     text: `${user.firstName} ${user.lastName} has left.`,
+                    userId: user._id
                 });
             }
         } catch (error) {
