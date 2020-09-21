@@ -4,8 +4,8 @@
     "description": "Nice to Meet You - Back-End",
     "main": "index.js",
     "scripts": {
-        "start": "env-cmd -f ./env/dev.env nodemon build/index.js && tsc --w",
-        "build": "node build/index.js",
+        "start": "env-cmd -f ./env/dev.env nodemon dist/index.js && tsc --w",
+        "build": "npm install && tsc --build",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
