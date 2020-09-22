@@ -13,9 +13,8 @@ export const removeUser: ActionCreator<Action> = () => ({
 export const loginUser = (data: LoginFormProps) => {
     return async (dispatch: any) => {
         try {
-            const url = process.env.SERVER_URL_LOCAL || process.env.SERVER_URL;
             const token = await reqService.loginUser(
-                `${url!}/api/users/login`,
+                `${process.env.REACT_APP_SERVER_URL}/api/users/login`,
                 data
             );
 
