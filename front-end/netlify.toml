@@ -1,5 +1,0 @@
-[[redirects]]
-from = "/"
-to = "https://nice2meetyou.herokuapp.com"
-status = 200
-force = true # COMMENT: ensure that we always redirect

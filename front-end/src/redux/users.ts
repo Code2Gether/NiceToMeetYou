@@ -13,7 +13,12 @@ export const removeUser: ActionCreator<Action> = () => ({
 export const loginUser = (data: LoginFormProps) => {
     return async (dispatch: any) => {
         try {
-            const token = await reqService.loginUser('/api/users/login', data);
+            const url = process.env.SERVER_URL_LOCAL || process.env.SERVER_URL;
+            const token = await reqService.loginUser(
+                `${url!}/api/users/login`,
+                data
+            );
+
             tokenService.setToken(token);
 
             dispatch({
