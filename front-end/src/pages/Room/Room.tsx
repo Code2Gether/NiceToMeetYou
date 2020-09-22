@@ -25,12 +25,13 @@ interface Data {
 const Room: React.FC<RoomProps> = ({ user }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const { id: roomId }: { id: string } = useParams();
-    const socket: SocketIOClient.Socket = io.connect('/');
+    const url = process.env.REACT_APP_SERVER_URL;
+    const socket: SocketIOClient.Socket = io.connect(url!);
     const peers: Peers = {};
     const myPeer = new Peer(user._id, {
         path: '/peerjs',
         host: '/',
-        port: 3000,
+        // port: 3000,
     });
     let myVideoStream;
     const myVideo = document.createElement('video');
