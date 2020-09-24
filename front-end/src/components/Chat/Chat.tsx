@@ -41,16 +41,17 @@ const Chat: React.FC<ChatProps> = ({ user, socket }) => {
         setMessage(evt.target.value);
     };
 
-    useEffect(() => {
-        socketRef.current = socket;
-        socketRef.current.emit('join', { user, roomId }, (error: any) => {
-            if (error) {
-                setError(error);
-            }
-        });
-    }, []);
+    // useEffect(() => {
+    //     socketRef.current = socket;
+    //     socketRef.current.emit('join', { user, roomId }, (error: any) => {
+    //         if (error) {
+    //             setError(error);
+    //         }
+    //     });
+    // }, []);
 
     useEffect(() => {
+        socketRef.current = socket;
         socketRef.current!.on('message', (message: Message) => {
             setMessages((messages) => [...messages, message]);
         });

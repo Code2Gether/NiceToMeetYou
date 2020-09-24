@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useCallback } from 'react';
 import io from 'socket.io-client';
-// import Peer from 'peerjs';
+import Peer from 'peerjs';
 import { connect } from 'react-redux';
 import Chat from '../../components/Chat/Chat';
 import {
@@ -12,12 +12,22 @@ import {
 } from './Room.styles';
 import { RoomProps } from '../../utils/types/types';
 import { useParams } from 'react-router-dom';
+import store from '../../store';
+
 const url = process.env.REACT_APP_SERVER_URL!;
 const socket: SocketIOClient.Socket = io(url);
+let myPeer: Peer;
+if (store.getState().user) {
+    myPeer = new Peer(store.getState().user._id, {
+        path: "/peerjs",
+        host: "/",
+        port: 3001,
+    });
+}
 
-// interface Peers {
-//     [key: string]: Peer.MediaConnection;
-// }
+interface Peers {
+    [key: string]: Peer.MediaConnection;
+}
 
 interface Data {
     userId: string;
@@ -27,79 +37,66 @@ interface Data {
 const Room: React.FC<RoomProps> = ({ user }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const { id: roomId }: { id: string } = useParams();
-    // const peers: Peers = {};
-    // const myPeer = new Peer(user._id, {
-    //     path: '/peerjs',
-    //     host: '/',
-    //     port: 3000,
-    // });
-    let myVideoStream;
+    const peers: Peers = {};
     const myVideo = document.createElement('video');
     myVideo.muted = true;
 
     const addVideoStream = useCallback(
         (video: HTMLVideoElement, stream: MediaStream) => {
-            // console.log('addVideo', video, stream);
             video.srcObject = stream;
             video.addEventListener('loadedmetadata', () => video.play());
             if (containerRef.current) {
                 containerRef.current!.appendChild(video);
-                // console.log('append Video');
-                // console.log(containerRef.current);
             }
         },
         [containerRef.current]
     );
 
     const connectNewUser = (userId: string, stream: MediaStream) => {
-        // const call = myPeer.call(userId, stream);
-        // console.log('connect-call', call);
+        const call = myPeer && myPeer.call(userId, stream);
         const video = document.createElement('video');
 
-        // call.on('stream', (userVideoStream) =>
-        //     addVideoStream(video, userVideoStream)
-        // );
+        call && call.on('stream', (userVideoStream) =>
+            addVideoStream(video, userVideoStream)
+        );
 
-        // call.on('close', () => video.remove());
-        // peers[userId] = call;
-        // console.log('connect-peers', peers);
+        call && call.on('close', () => video.remove());
+        peers[userId] = call;
     };
 
-    navigator.mediaDevices
+    useEffect(() => {
+        navigator.mediaDevices
         .getUserMedia({
             video: true,
             audio: true,
         })
         .then((stream) => {
-            myVideoStream = stream;
             addVideoStream(myVideo, stream);
-            // console.log('navigator-myVideo', myVideo, stream);
 
-            // myPeer.on('call', (call) => {
-            //     call.answer(stream);
-            //     const video = document.createElement('video');
-            //     console.log('s', stream);
-            //     call.on('stream', (userVideoStream) => {
-            //         console.log('u', userVideoStream);
-            //         return addVideoStream(video, userVideoStream);
-            //     });
-            // });
+            myPeer && myPeer.on('call', (call) => {
+                call.answer(stream);
+                const video = document.createElement('video');
+                call.on('stream', (userVideoStream) => {
+                    return addVideoStream(video, userVideoStream);
+                });
+            });
 
             socket.on('user-connected', ({ userId }: Data) => {
-                console.log('backend user-connected');
                 return connectNewUser(userId, stream);
             });
+
+            socket.on('user-disconnected', ({ userId }: Data) => {
+                if (peers[userId]) peers[userId].close();
+            });
         });
+    }, [])
 
-    socket.on('user-disconnected', ({ userId }: Data) => {
-        // if (peers[userId]) peers[userId].close();
-    });
-
-    // myPeer.on('open', () => {
-    // socket.emit('join', { user, roomId });
-    //     console.log(socket.id);
-    // });
-
+    useEffect(() => {
+        myPeer && myPeer.on('open', () => {
+            socket.emit('join', { user, roomId });
+            console.log('open')
+        });
+    }, []);
     // useEffect(() => {
     //     return () => {
     //         const allChildNodes = containerRef.current?.childNodes
@@ -111,7 +108,6 @@ const Room: React.FC<RoomProps> = ({ user }) => {
         <RoomContainer>
             <RoomHeader />
             <RoomVideoContainer ref={containerRef} />
-            {/* allVideos.map(video => ReactDOM.render(video)) */}
             <RoomFooter />
             <Chat socket={socket} />
         </RoomContainer>
