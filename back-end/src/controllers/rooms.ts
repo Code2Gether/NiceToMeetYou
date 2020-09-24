@@ -1,4 +1,5 @@
 import { RequestHandler } from 'express';
+import { User } from '../models/user';
 import { Room } from '../models/room';
 
 const create: RequestHandler = async (req, res) => {
@@ -13,6 +14,9 @@ const create: RequestHandler = async (req, res) => {
     });
     await room.users.push(req.user._id);
     await room.save();
+    const userDoc = await User.findOne({ _id: req.user._id });
+    userDoc.roomId = room._id;
+    await userDoc.save();
     res.status(201).json({ roomId: room._id });
 };
 
@@ -31,6 +35,9 @@ const join: RequestHandler = async (req, res) => {
             if (isMatch) {
                 await room.users.push(req.user._id);
                 await room.save();
+                const userDoc = await User.findOne({ _id: req.user._id });
+                userDoc.roomId = roomId;
+                await userDoc.save();
                 return res.json({ roomId: room._id });
             }
             res.status(400).json({ message: 'Wrong credentials' });

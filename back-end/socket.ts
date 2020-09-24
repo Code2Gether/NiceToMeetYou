@@ -1,5 +1,6 @@
 import { Room } from './src/models/room';
-import { SocketJoinDisconnect, SocketMessage } from './src/utils/types';
+import { User } from './src/models/user';
+import { SocketJoinDisconnect, SocketMessage, ErrorType } from './src/utils/types';
 import { http } from './app';
 import mongoose from 'mongoose';
 const io = require('socket.io')(http);
@@ -11,26 +12,34 @@ io.on('connection', (socket) => {
             { user, roomId }: SocketJoinDisconnect,
             callback: (msg?: string) => void
         ) => {
-            const room = await Room.findOne({
-                users: mongoose.Types.ObjectId(user._id),
-            }).populate('users');
-            console.log(room._id);
-            console.log(socket.id);
+            try {
+                const userDoc = await User.findOne({ _id: user._id });
+                if (userDoc.roomId !== roomId) return callback('Sorry! Room not found!');
 
-            if (!room || room._id.toString() !== roomId)
-                return callback('Sorry! Room not found!');
+                userDoc.socketId = socket.id;
+                await userDoc.save();
 
-            socket.join(room._id);
+                const room = await Room.findOne({
+                    users: mongoose.Types.ObjectId(user._id),
+                }).populate('users');
 
-            socket.to(room._id).broadcast.emit('user-connected', {
-                text: `${user.firstName} ${user.lastName} has joined the room!`,
-                userId: user._id,
-            });
+                if (!room || room._id.toString() !== roomId)
+                    return callback('Sorry! Room not found!');
 
-            io.to(room._id).emit('roomData', {
-                room: room._id,
-                users: room.users,
-            });
+                socket.join(room._id);
+
+                socket.to(room._id).broadcast.emit('user-connected', {
+                    text: `${user.firstName} ${user.lastName} has joined the room!`,
+                    userId: user._id,
+                });
+
+                io.to(room._id).emit('roomData', {
+                    room: room._id,
+                    users: room.users,
+                });
+            } catch (error) {
+                io.to(roomId).emit('error', { error: error, message: '' });
+            }
         }
     );
 
@@ -40,6 +49,7 @@ io.on('connection', (socket) => {
             const room = await Room.findOne({
                 users: mongoose.Types.ObjectId(user._id),
             });
+            console.log('message')
             const time = new Date();
             io.to(room._id).emit('message', {
                 userId: user._id,
@@ -52,25 +62,29 @@ io.on('connection', (socket) => {
         }
     );
 
-    socket.on('disconnect', async ({ user, roomId }: SocketJoinDisconnect) => {
+    socket.on('disconnect', async () => {
+        let roomId;
         try {
-            const room = await Room.findOne({ _id: roomId });
-            if (user._id === room.admin.toString()) {
+            const userDoc = await User.findOne({ socketId: socket.id });
+            if (!userDoc) throw <ErrorType>({name: 'SOCKET ID NOT FOUND', message: 'Socket ID not found'})
+            const room = await Room.findOne({ _id: userDoc.roomId });
+            roomId = room._id;
+            if (userDoc._id === room.admin.toString()) {
                 await room.remove();
-                io.to(roomId).emit('closeRoom');
+                io.to(room._id).emit('closeRoom');
             } else {
                 //! Leave room
-                const userDoc = room.users.find(
-                    (doc) => doc._id.toString() === user._id
-                );
-                await userDoc.remove();
+                room.users = room.users.filter(user => user.toString() !== userDoc._id.toString());
                 await room.save();
-                io.to(roomId).emit('user-disconnected', {
-                    text: `${user.firstName} ${user.lastName} has left.`,
-                    userId: user._id,
+                io.to(room._id).emit('user-disconnected', {
+                    text: `${userDoc.firstName} ${userDoc.lastName} has left.`,
+                    userId: userDoc._id,
                 });
             }
         } catch (error) {
+            if (error.name === 'SOCKET ID NOT FOUND') {
+                return console.log(error.message)
+            }
             io.to(roomId).emit('error', { error: error, message: '' });
         }
     });

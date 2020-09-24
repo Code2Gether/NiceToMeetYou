@@ -44,3 +44,8 @@ export interface SocketJoinDisconnect extends User {
 export interface SocketMessage extends User {
     message: string;
 }
+
+export interface ErrorType {
+    name: string;
+    message: string;
+}

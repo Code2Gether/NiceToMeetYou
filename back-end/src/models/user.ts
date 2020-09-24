@@ -34,6 +34,8 @@ const userSchema = new Schema(
             type: Boolean,
             default: false,
         },
+        socketId: String,
+        roomId: String,
         password: {
             type: String,
             required: true,
