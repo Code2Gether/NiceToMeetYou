@@ -1,18 +1,21 @@
 import { Room } from './src/models/room';
 import { SocketJoinDisconnect, SocketMessage } from './src/utils/types';
 import { http } from './app';
+import mongoose from 'mongoose';
 const io = require('socket.io')(http);
 
-io.on('connect', (socket) => {
+io.on('connection', (socket) => {
     socket.on(
         'join',
         async (
             { user, roomId }: SocketJoinDisconnect,
             callback: (msg?: string) => void
         ) => {
-            const room = await Room.findOne({ users: user._id }).populate(
-                'users'
-            );
+            const room = await Room.findOne({
+                users: mongoose.Types.ObjectId(user._id),
+            }).populate('users');
+            console.log(room._id);
+            console.log(socket.id);
 
             if (!room || room._id.toString() !== roomId)
                 return callback('Sorry! Room not found!');
@@ -34,11 +37,10 @@ io.on('connect', (socket) => {
     socket.on(
         'sendMessage',
         async ({ message, user }: SocketMessage, callback: () => void) => {
-            const room = await Room.findOne({ users: user._id });
-
+            const room = await Room.findOne({
+                users: mongoose.Types.ObjectId(user._id),
+            });
             const time = new Date();
-            console.log(room);
-            console.log(user);
             io.to(room._id).emit('message', {
                 userId: user._id,
                 user: `${user.firstName} ${user.lastName}`,

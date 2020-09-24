@@ -66,9 +66,9 @@ const Chat: React.FC<ChatProps> = ({ user, socket }) => {
     const handleSendMessage = (evt: MouseEvent | FormEvent) => {
         evt.preventDefault();
         if (message.length > 0) {
-            socketRef.current!.emit('sendMessage', { message, user }, () => {
-                setMessage('');
-            });
+            socketRef.current!.emit('sendMessage', { message, user }, () =>
+                setMessage('')
+            );
         }
     };
 

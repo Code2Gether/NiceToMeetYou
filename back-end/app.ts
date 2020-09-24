@@ -6,16 +6,16 @@ import cors from 'cors';
 require('./src/config/database');
 const app = express();
 export const http = require('http').Server(app);
-const { ExpressPeerServer } = require('peer');
-const peerServer = ExpressPeerServer(http, {
-    debug: true
-});
+// const { ExpressPeerServer } = require('peer');
+// const peerServer = ExpressPeerServer(http, {
+//     debug: true,
+// });
 
 app.use(cors());
-app.use('/peerjs', peerServer);
+require('./socket');
+// app.use('/peerjs', peerServer);
 app.use(logger('dev'));
 app.use(express.json());
-require('./socket');
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
