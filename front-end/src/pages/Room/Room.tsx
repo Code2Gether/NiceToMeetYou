@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 import io from 'socket.io-client';
 import Peer from 'peerjs';
 import { connect } from 'react-redux';
@@ -19,8 +20,8 @@ const socket: SocketIOClient.Socket = io(url);
 let myPeer: Peer;
 if (store.getState().user) {
     myPeer = new Peer(store.getState().user._id, {
-        path: "/peerjs",
-        host: "/",
+        path: '/peerjs',
+        host: '/',
         port: 3001,
     });
 }
@@ -35,6 +36,7 @@ interface Data {
 }
 
 const Room: React.FC<RoomProps> = ({ user }) => {
+    const history = useHistory();
     const containerRef = useRef<HTMLDivElement>(null);
     const { id: roomId }: { id: string } = useParams();
     const peers: Peers = {};
@@ -56,9 +58,10 @@ const Room: React.FC<RoomProps> = ({ user }) => {
         const call = myPeer && myPeer.call(userId, stream);
         const video = document.createElement('video');
 
-        call && call.on('stream', (userVideoStream) =>
-            addVideoStream(video, userVideoStream)
-        );
+        call &&
+            call.on('stream', (userVideoStream) =>
+                addVideoStream(video, userVideoStream)
+            );
 
         call && call.on('close', () => video.remove());
         peers[userId] = call;
@@ -66,37 +69,45 @@ const Room: React.FC<RoomProps> = ({ user }) => {
 
     useEffect(() => {
         navigator.mediaDevices
-        .getUserMedia({
-            video: true,
-            audio: true,
-        })
-        .then((stream) => {
-            addVideoStream(myVideo, stream);
+            .getUserMedia({
+                video: true,
+                audio: true,
+            })
+            .then((stream) => {
+                addVideoStream(myVideo, stream);
 
-            myPeer && myPeer.on('call', (call) => {
-                call.answer(stream);
-                const video = document.createElement('video');
-                call.on('stream', (userVideoStream) => {
-                    return addVideoStream(video, userVideoStream);
+                myPeer &&
+                    myPeer.on('call', (call) => {
+                        call.answer(stream);
+                        const video = document.createElement('video');
+                        call.on('stream', (userVideoStream) => {
+                            return addVideoStream(video, userVideoStream);
+                        });
+                    });
+
+                socket.on('user-connected', ({ userId }: Data) => {
+                    return connectNewUser(userId, stream);
+                });
+
+                socket.on('user-disconnected', ({ userId }: Data) => {
+                    if (peers[userId]) peers[userId].close();
+                });
+
+                socket.on('closeRoom', () => {
+                    history.push('/');
                 });
             });
-
-            socket.on('user-connected', ({ userId }: Data) => {
-                return connectNewUser(userId, stream);
-            });
-
-            socket.on('user-disconnected', ({ userId }: Data) => {
-                if (peers[userId]) peers[userId].close();
-            });
-        });
-    }, [])
+    }, []);
 
     useEffect(() => {
-        myPeer && myPeer.on('open', () => {
-            socket.emit('join', { user, roomId });
-            console.log('open')
-        });
+        myPeer &&
+            myPeer.on('open', () => {
+                socket.emit('join', { user, roomId });
+                console.log('open');
+            });
     }, []);
+
+    // TODO REMOVE EVENT LISTENERS
     // useEffect(() => {
     //     return () => {
     //         const allChildNodes = containerRef.current?.childNodes

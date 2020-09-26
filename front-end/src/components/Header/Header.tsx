@@ -11,7 +11,10 @@ const Header: React.FC<HeaderProps> = ({ user, removeUser }) => {
 
     const menu =
         user && user.firstName !== '' ? (
-            <NavLink onClick={handleLogout}>Logout</NavLink>
+            <>
+                <NavLink onClick={() => {}}>Create Room</NavLink>
+                <NavLink onClick={handleLogout}>Logout</NavLink>
+            </>
         ) : (
             <>
                 <NavLink href="/signup">Sign Up</NavLink>

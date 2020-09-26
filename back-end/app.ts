@@ -11,6 +11,8 @@ const peerServer = ExpressPeerServer(http, {
     debug: true,
 });
 
+console.log(process.env.SEND_GRID_KEY);
+
 app.use(cors());
 require('./socket');
 app.use('/peerjs', peerServer);

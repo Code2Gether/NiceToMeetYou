@@ -1,6 +1,10 @@
 import { Room } from './src/models/room';
 import { User } from './src/models/user';
-import { SocketJoinDisconnect, SocketMessage, ErrorType } from './src/utils/types';
+import {
+    SocketJoinDisconnect,
+    SocketMessage,
+    ErrorType,
+} from './src/utils/types';
 import { http } from './app';
 import mongoose from 'mongoose';
 const io = require('socket.io')(http);
@@ -14,11 +18,11 @@ io.on('connection', (socket) => {
         ) => {
             try {
                 const userDoc = await User.findOne({ _id: user._id });
-                if (userDoc.roomId !== roomId) return callback('Sorry! Room not found!');
+                if (userDoc.roomId !== roomId)
+                    return callback('Sorry! Room not found!');
 
                 userDoc.socketId = socket.id;
                 await userDoc.save();
-
                 const room = await Room.findOne({
                     users: mongoose.Types.ObjectId(user._id),
                 }).populate('users');
@@ -49,7 +53,6 @@ io.on('connection', (socket) => {
             const room = await Room.findOne({
                 users: mongoose.Types.ObjectId(user._id),
             });
-            console.log('message')
             const time = new Date();
             io.to(room._id).emit('message', {
                 userId: user._id,
@@ -66,16 +69,24 @@ io.on('connection', (socket) => {
         let roomId;
         try {
             const userDoc = await User.findOne({ socketId: socket.id });
-            if (!userDoc) throw <ErrorType>({name: 'SOCKET ID NOT FOUND', message: 'Socket ID not found'})
-            const room = await Room.findOne({ _id: userDoc.roomId });
+            if (!userDoc)
+                throw <ErrorType>{
+                    message: 'Socket ID not found',
+                };
+            const room = await Room.findOne({
+                _id: userDoc.roomId,
+            });
             roomId = room._id;
-            if (userDoc._id === room.admin.toString()) {
-                await room.remove();
+            if (userDoc._id.toString() === room.admin.toString()) {
+                // FIX REMOVE THE COMMENT
+                // await room.remove();
                 io.to(room._id).emit('closeRoom');
             } else {
-                //! Leave room
-                room.users = room.users.filter(user => user.toString() !== userDoc._id.toString());
-                await room.save();
+                // FIX REMOVE THE COMMENT
+                // room.users = room.users.filter(
+                //     (user) => user.toString() !== userDoc._id.toString()
+                // );
+                // await room.save();
                 io.to(room._id).emit('user-disconnected', {
                     text: `${userDoc.firstName} ${userDoc.lastName} has left.`,
                     userId: userDoc._id,
@@ -83,7 +94,6 @@ io.on('connection', (socket) => {
             }
         } catch (error) {
             if (error.name === 'SOCKET ID NOT FOUND') {
-                return console.log(error.message)
             }
             io.to(roomId).emit('error', { error: error, message: '' });
         }
