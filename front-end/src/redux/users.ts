@@ -14,7 +14,7 @@ export const loginUser = (data: LoginFormProps) => {
     return async (dispatch: any) => {
         try {
             const token = await reqService.loginUser(
-                `${process.env.REACT_APP_SERVER_URL}/api/users/login`,
+                `https://${process.env.REACT_APP_SERVER_URL}/api/users/login`,
                 data
             );
 

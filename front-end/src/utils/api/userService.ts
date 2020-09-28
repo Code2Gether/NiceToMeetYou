@@ -5,7 +5,7 @@ export const signUpUser = async (data: SignUpFormProps) => {
     try {
         const url = process.env.SERVER_URL_LOCAL || process.env.SERVER_URL;
         return await reqService.signUpUser(
-            `${process.env.REACT_APP_SERVER_URL}/api/users/signup`,
+            `https://${process.env.REACT_APP_SERVER_URL}/api/users/signup`,
             data
         );
     } catch (error) {
@@ -17,7 +17,7 @@ export const resendVerifyEmail = async (email: {}) => {
     try {
         const url = process.env.SERVER_URL_LOCAL || process.env.SERVER_URL;
         return await reqService.resendEmail(
-            `${process.env.REACT_APP_SERVER_URL}/api/users/verify-email/resendEmailTokenId`,
+            `https://${process.env.REACT_APP_SERVER_URL}/api/users/verify-email/resendEmailTokenId`,
             email
         );
     } catch (error) {

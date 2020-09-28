@@ -22,6 +22,8 @@ if (store.getState().user) {
     myPeer = new Peer(store.getState().user._id, {
         path: '/peerjs',
         host: url,
+        port: 443,
+        secure: true,
     });
 }
 
@@ -102,7 +104,7 @@ const Room: React.FC<RoomProps> = ({ user }) => {
         myPeer &&
             myPeer.on('open', () => {
                 socket.emit('join', { user, roomId });
-                console.log('open');
+                console.log('join', { user, roomId });
             });
     }, []);
 

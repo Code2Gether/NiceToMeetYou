@@ -50,6 +50,14 @@
         myPeer = new Peer(store.getState().user._id, {
             path: '/peerjs',
             host: url,
+            port: 443,
+            secure: true,
         });
     }
+  ```
+
+- In `front-end/.env.local`
+
+  ```Bash
+    REACT_APP_SERVER_URL="<your_app_name_without_https>.herokuapp.com"
   ```
