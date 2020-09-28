@@ -79,15 +79,13 @@ try {
                 });
                 roomId = room._id;
                 if (userDoc._id.toString() === room.admin.toString()) {
-                    // FIX REMOVE THE COMMENT
-                    // await room.remove();
+                    await room.remove();
                     io.to(room._id).emit('closeRoom');
                 } else {
-                    // FIX REMOVE THE COMMENT
-                    // room.users = room.users.filter(
-                    //     (user) => user.toString() !== userDoc._id.toString()
-                    // );
-                    // await room.save();
+                    room.users = room.users.filter(
+                        (user) => user.toString() !== userDoc._id.toString()
+                    );
+                    await room.save();
                     io.to(room._id).emit('user-disconnected', {
                         text: `${userDoc.firstName} ${userDoc.lastName} has left.`,
                         userId: userDoc._id,

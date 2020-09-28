@@ -87,10 +87,11 @@ export interface OptionProps {
 
 export interface ModalProps {
     text: string;
+    secondText?: string;
     btnText: string;
-    handleCancel: () => void;
-    handleOk: (email: string) => void;
-    input: boolean;
+    handleCancel?: () => void;
+    handleOk: () => void;
+    okBtnDisabled: () => boolean;
 }
 
 export interface ButtonWrapperProps {
@@ -128,6 +129,10 @@ export interface ChatMessagesLiProps {
     direction: string;
 }
 
-export interface RoomProps {
+export interface AppAndRoomProps {
     user: UserProps;
+}
+export interface CreateRoomProps {
+    password: string;
+    confirmPassword: string;
 }

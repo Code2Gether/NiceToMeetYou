@@ -11,7 +11,7 @@ import {
     RoomFooter,
     RoomHeader,
 } from './Room.styles';
-import { RoomProps } from '../../utils/types/types';
+import { AppAndRoomProps } from "../../utils/types/types";
 import { useParams } from 'react-router-dom';
 import store from '../../store';
 
@@ -36,7 +36,7 @@ interface Data {
     text: string;
 }
 
-const Room: React.FC<RoomProps> = ({ user }) => {
+const Room: React.FC<AppAndRoomProps> = ({ user }) => {
     const history = useHistory();
     const containerRef = useRef<HTMLDivElement>(null);
     const { id: roomId }: { id: string } = useParams();

@@ -8,33 +8,21 @@ import ButtonWrapper from '../ButtonWrapper/ButtonWrapper';
 
 const ModalComponent: React.FC<ModalProps> = ({
     text,
+    secondText,
     btnText,
     handleCancel,
     handleOk,
-    input,
+    okBtnDisabled,
+    children
 }) => {
-    const [email, setEmail] = useState('');
-
-    const handleChange = ({
-        target: { name, value },
-    }: ChangeEvent<HTMLInputElement>) => {
-    };
-
     return (
         <ModalContainer>
             <ModalDiv>
                 <ModalText>{text}</ModalText>
-                {input && (
-                    <InputComponent
-                        onChange={handleChange}
-                        name="email"
-                        type="email"
-                        placeholder="Email"
-                        required={true}
-                    />
-                )}
+                <ModalText>{secondText}</ModalText>
+                {children}
                 <ButtonWrapper direction="right">
-                    <ButtonComponent
+                    {handleCancel && <ButtonComponent
                         fontSize={2}
                         width={10}
                         height={4}
@@ -44,15 +32,15 @@ const ModalComponent: React.FC<ModalProps> = ({
                         onClick={handleCancel}
                     >
                         Cancel
-                    </ButtonComponent>
+                    </ButtonComponent>}
                     <ButtonComponent
                         fontSize={2}
                         width={10}
                         height={4}
-                        disabled={false}
+                        disabled={okBtnDisabled() || false}
                         color={theme.colors.white}
-                        bgColor={theme.colors.green['400']}
-                        onClick={() => handleOk(email)}
+                        bgColor={okBtnDisabled() ? theme.colors.grey['200']: theme.colors.green['400']}
+                        onClick={handleOk}
                     >
                         {btnText}
                     </ButtonComponent>
