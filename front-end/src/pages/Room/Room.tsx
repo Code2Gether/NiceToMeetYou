@@ -21,8 +21,7 @@ let myPeer: Peer;
 if (store.getState().user) {
     myPeer = new Peer(store.getState().user._id, {
         path: '/peerjs',
-        host: '/',
-        port: 3001,
+        host: url,
     });
 }
 
