@@ -23,6 +23,7 @@ const Login: React.FC<LoginProps> = ({ loginUser }) => {
     const [showMsg, setShowMsg] = useState<boolean>(false);
     const [resend, setResend] = useState<boolean>(false);
     const [open, setOpen] = useState<boolean>(false);
+    const [emailModal, setEmailModal] = useState("");
     const [form, setForm] = useState<LoginFormProps>({
         email: '',
         password: '',
@@ -39,10 +40,12 @@ const Login: React.FC<LoginProps> = ({ loginUser }) => {
     const handleChange = ({
         target: { name, value },
     }: ChangeEvent<HTMLInputElement>) => {
-        setForm({
-            ...form,
-            [name]: value,
-        });
+        if (name === 'emailModal') setEmailModal(value)
+        else
+            setForm({
+                ...form,
+                [name]: value,
+            });
     };
 
     const handleSubmit = async (evt: FormEvent | MouseEvent) => {
@@ -66,9 +69,9 @@ const Login: React.FC<LoginProps> = ({ loginUser }) => {
         setOpen(true);
     };
 
-    const handleOk = async (email: string) => {
+    const handleOk = async () => {
         try {
-            await resendVerifyEmail({ email: email });
+            await resendVerifyEmail({ email: emailModal });
         } catch (error) {
             // TODO Handle login error
             console.log(error);
@@ -149,8 +152,17 @@ const Login: React.FC<LoginProps> = ({ loginUser }) => {
                     btnText="Resend"
                     handleCancel={handleClose}
                     handleOk={handleOk}
-                    input={true}
-                ></ModalComponent>
+                    okBtnDisabled={() => false}
+                >
+                    <InputComponent
+                        onChange={handleChange}
+                        name="emailModal"
+                        type="email"
+                        placeholder="Email"
+                        value={emailModal}
+                        required={true}
+                    />
+                </ModalComponent>
             )}
         </LoginPage>
     );
