@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect, useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import io from 'socket.io-client';
 import Peer from 'peerjs';
@@ -7,25 +7,12 @@ import Chat from '../../components/Chat/Chat';
 import {
     RoomContainer,
     RoomVideoContainer,
-    RoomVideo,
     RoomFooter,
     RoomHeader,
 } from './Room.styles';
-import { AppAndRoomProps } from "../../utils/types/types";
+import { AppAndRoomProps } from '../../utils/types/types';
 import { useParams } from 'react-router-dom';
-import store from '../../store';
-
-const url = process.env.REACT_APP_SERVER_URL!;
-const socket: SocketIOClient.Socket = io(url);
-let myPeer: Peer;
-if (store.getState().user) {
-    myPeer = new Peer(store.getState().user._id, {
-        path: '/peerjs',
-        host: url,
-        port: 443,
-        secure: true,
-    });
-}
+import * as roomService from '../../utils/api/roomService';
 
 interface Peers {
     [key: string]: Peer.MediaConnection;
@@ -38,17 +25,22 @@ interface Data {
 
 const Room: React.FC<AppAndRoomProps> = ({ user }) => {
     const history = useHistory();
-    const containerRef = useRef<HTMLDivElement>(null);
-    const { id: roomId }: { id: string } = useParams();
     const peers: Peers = {};
+    const { id: roomId }: { id: string } = useParams();
+    const myPeerRef = useRef<Peer | null>(null);
+    const socketRef = useRef<SocketIOClient.Socket | null>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
     const myVideo = document.createElement('video');
     myVideo.muted = true;
+    const [loading, setLoading] = useState(true);
 
     const addVideoStream = useCallback(
         (video: HTMLVideoElement, stream: MediaStream) => {
+            console.log('addVideo');
             video.srcObject = stream;
             video.addEventListener('loadedmetadata', () => video.play());
             if (containerRef.current) {
+                console.log('containerRef');
                 containerRef.current!.appendChild(video);
             }
         },
@@ -56,56 +48,96 @@ const Room: React.FC<AppAndRoomProps> = ({ user }) => {
     );
 
     const connectNewUser = (userId: string, stream: MediaStream) => {
-        const call = myPeer && myPeer.call(userId, stream);
+        const call = myPeerRef.current!.call(userId, stream);
         const video = document.createElement('video');
 
-        call &&
+        console.log('userId', userId);
+        console.log('call', call);
+
+        if (call) {
             call.on('stream', (userVideoStream) =>
                 addVideoStream(video, userVideoStream)
             );
 
-        call && call.on('close', () => video.remove());
-        peers[userId] = call;
+            call.on('close', () => video.remove());
+            peers[userId] = call;
+        }
+        console.log('peers', peers);
     };
 
     useEffect(() => {
-        navigator.mediaDevices
-            .getUserMedia({
-                video: true,
-                audio: true,
-            })
-            .then((stream) => {
-                addVideoStream(myVideo, stream);
+        const url = process.env.REACT_APP_SERVER_URL!.split(':')[0];
+        const port = +process.env.REACT_APP_SERVER_PORT!;
+        // const secure = port !== 3001;
 
-                myPeer &&
-                    myPeer.on('call', (call) => {
-                        call.answer(stream);
-                        const video = document.createElement('video');
-                        call.on('stream', (userVideoStream) => {
-                            return addVideoStream(video, userVideoStream);
+        socketRef.current = io(`${url}:${port}`);
+        myPeerRef.current = new Peer(user._id, {
+            path: '/peerjs',
+            host: url,
+            port: port,
+            // secure
+        });
+        console.log(socketRef.current);
+        async function connect() {
+            try {
+                const access = await roomService.accessRoom({ roomId });
+
+                if (access.status) {
+                    history.push(`/join/${roomId}`);
+                } else {
+                    navigator.mediaDevices
+                        .getUserMedia({
+                            video: true,
+                            audio: true,
+                        })
+                        .then((stream) => {
+                            addVideoStream(myVideo, stream);
+                            myPeerRef.current!.on('call', (call) => {
+                                call.answer(stream);
+                                const video = document.createElement('video');
+                                call.on('stream', (userVideoStream) => {
+                                    return addVideoStream(
+                                        video,
+                                        userVideoStream
+                                    );
+                                });
+                            });
+
+                            socketRef.current!.on(
+                                'user-connected',
+                                ({ userId }: Data) => {
+                                    console.log('user-connected');
+                                    return connectNewUser(userId, stream);
+                                }
+                            );
+
+                            socketRef.current!.on(
+                                'user-disconnected',
+                                ({ userId }: Data) => {
+                                    //! Check if we are deleting user from peers array
+                                    if (peers[userId]) peers[userId].close();
+                                }
+                            );
+
+                            socketRef.current!.on('closeRoom', () => {
+                                history.push('/');
+                            });
                         });
-                    });
-
-                socket.on('user-connected', ({ userId }: Data) => {
-                    return connectNewUser(userId, stream);
-                });
-
-                socket.on('user-disconnected', ({ userId }: Data) => {
-                    if (peers[userId]) peers[userId].close();
-                });
-
-                socket.on('closeRoom', () => {
-                    history.push('/');
-                });
-            });
+                }
+            } catch (error) {
+                console.log(error);
+            }
+            setLoading(false);
+        }
+        connect();
     }, []);
 
     useEffect(() => {
-        myPeer &&
-            myPeer.on('open', () => {
-                socket.emit('join', { user, roomId });
-                console.log('join', { user, roomId });
-            });
+        myPeerRef.current!.on('open', () => {
+            console.log('opened');
+            socketRef.current!.emit('join', { user, roomId });
+            console.log('emitido');
+        });
     }, []);
 
     // TODO REMOVE EVENT LISTENERS
@@ -121,7 +153,7 @@ const Room: React.FC<AppAndRoomProps> = ({ user }) => {
             <RoomHeader />
             <RoomVideoContainer ref={containerRef} />
             <RoomFooter />
-            <Chat socket={socket} />
+            {!loading && <Chat socket={socketRef.current!} />}
         </RoomContainer>
     );
 };

@@ -14,7 +14,7 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({
     return (
         <ErrorMessageDiv>
             <ErrorMessageTitle color={color}>{msg}</ErrorMessageTitle>
-            <ErrorMessageIcon color={color} icon={iconType} />
+            {iconType && <ErrorMessageIcon color={color} icon={iconType} />}
         </ErrorMessageDiv>
     );
 };

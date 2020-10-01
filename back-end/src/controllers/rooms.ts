@@ -1,23 +1,47 @@
 import { RequestHandler } from 'express';
+import mongoose from 'mongoose';
 import { User } from '../models/user';
 import { Room } from '../models/room';
 
 const create: RequestHandler = async (req, res) => {
-    const password: string = req.body.password;
-    if (password.length < 7)
-        return res.status(400).json({ message: 'Invalid password' });
+    try {
+        const password: string = req.body.password;
+        if (password.length < 7)
+            return res.status(400).json({ message: 'Invalid password' });
 
-    await Room.findOneAndDelete({ admin: req.user._id });
-    const room = await new Room({
-        password,
-        admin: req.user._id,
-    });
-    await room.users.push(req.user._id);
-    await room.save();
-    const userDoc = await User.findOne({ _id: req.user._id });
-    userDoc.roomId = room._id;
-    await userDoc.save();
-    res.status(201).json({ roomId: room._id });
+        await Room.findOneAndDelete({ admin: req.user._id });
+        const room = await new Room({
+            password,
+            admin: req.user._id,
+        });
+        await room.users.push(req.user._id);
+        await room.save();
+
+        const userDoc = await User.findOne({ _id: req.user._id });
+        userDoc.roomId = room._id;
+        await userDoc.save();
+        res.status(201).json({ roomId: room._id });
+    } catch (error) {
+        res.status(500).json({ message: 'Something went wrong', error });
+    }
+};
+
+const access: RequestHandler = async (req, res) => {
+    const roomId: string = req.params.roomId;
+
+    try {
+        const roomDoc = await Room.findOne({ _id: roomId });
+        if (!roomDoc)
+            return res.status(400).json({
+                message: 'This room does not exist.',
+            });
+        console.log('ROOM:', roomDoc.users.includes(req.user._id));
+        if (roomDoc.users.includes(req.user._id))
+            return res.json({ message: 'User already in room' });
+        else return res.json({ status: 404, message: 'User not in room' });
+    } catch (error) {
+        res.status(500).json({ message: 'Something went wrong', error });
+    }
 };
 
 const join: RequestHandler = async (req, res) => {
@@ -67,6 +91,7 @@ const deleteRoom: RequestHandler = async (req, res) => {
 
 export const roomCtrl = {
     create,
+    access,
     join,
     deleteRoom,
 };

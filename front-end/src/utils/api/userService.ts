@@ -1,11 +1,14 @@
 import { SignUpFormProps } from '../../utils/types/types';
 import reqService from './reqService';
 
+const http =
+    +process.env.REACT_APP_SERVER_PORT! === 3001 ? 'http://' : '${http}';
+const url = process.env.REACT_APP_SERVER_URL!;
+
 export const signUpUser = async (data: SignUpFormProps) => {
     try {
-        const url = process.env.SERVER_URL_LOCAL || process.env.SERVER_URL;
         return await reqService.signUpUser(
-            `https://${process.env.REACT_APP_SERVER_URL}/api/users/signup`,
+            `${http}${url}/api/users/signup`,
             data
         );
     } catch (error) {
@@ -15,9 +18,8 @@ export const signUpUser = async (data: SignUpFormProps) => {
 
 export const resendVerifyEmail = async (email: {}) => {
     try {
-        const url = process.env.SERVER_URL_LOCAL || process.env.SERVER_URL;
         return await reqService.resendEmail(
-            `https://${process.env.REACT_APP_SERVER_URL}/api/users/verify-email/resendEmailTokenId`,
+            `${http}${url}/api/users/verify-email/resendEmailTokenId`,
             email
         );
     } catch (error) {

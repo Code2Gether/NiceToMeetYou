@@ -5,26 +5,32 @@ import Login from './pages/Login/Login';
 import SignUp from './pages/SignUp/SignUp';
 import Home from './pages/Home/Home';
 import Room from './pages/Room/Room';
-import { connect } from "react-redux";
+import JoinRoom from './pages/JoinRoom/JoinRoom';
+import { connect } from 'react-redux';
 import { AppAndRoomProps } from './utils/types/types';
 
-const App: React.FC<AppAndRoomProps> = ({user}) => {
+const App: React.FC<AppAndRoomProps> = ({ user }) => {
     let location = useLocation();
     const locationNow = location.pathname.split('/')[1];
 
-    const route = user && user.firstName ?
-        (<Switch>
-        <Route exact path="/" component={Home} />
-        <Route exact path="/rooms/:id" component={Room} />
-        <Route render={() => <Redirect to={{ pathname: '/' }} />} />
-        </Switch>) 
-    :
-        (<Switch>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/signup" component={SignUp} />
-            <Route render={() => <Redirect to={{ pathname: '/login' }} />} />
-        </Switch>);
+    const route =
+        user && user.firstName ? (
+            <Switch>
+                <Route exact path="/" component={Home} />
+                <Route exact path="/join/:id" component={JoinRoom} />
+                <Route exact path="/rooms/:id" component={Room} />
+                <Route render={() => <Redirect to={{ pathname: '/' }} />} />
+            </Switch>
+        ) : (
+            <Switch>
+                <Route exact path="/" component={Home} />
+                <Route exact path="/login" component={Login} />
+                <Route exact path="/signup" component={SignUp} />
+                <Route
+                    render={() => <Redirect to={{ pathname: '/login' }} />}
+                />
+            </Switch>
+        );
 
     return (
         <div className="App">
@@ -36,7 +42,7 @@ const App: React.FC<AppAndRoomProps> = ({user}) => {
 };
 
 const mapStateToProps = (state: any) => ({
-    user: state.user
-})
+    user: state.user,
+});
 
 export default connect(mapStateToProps)(App);

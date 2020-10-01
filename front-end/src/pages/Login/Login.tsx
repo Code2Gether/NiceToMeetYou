@@ -23,7 +23,7 @@ const Login: React.FC<LoginProps> = ({ loginUser }) => {
     const [showMsg, setShowMsg] = useState<boolean>(false);
     const [resend, setResend] = useState<boolean>(false);
     const [open, setOpen] = useState<boolean>(false);
-    const [emailModal, setEmailModal] = useState("");
+    const [emailModal, setEmailModal] = useState<string>('');
     const [form, setForm] = useState<LoginFormProps>({
         email: '',
         password: '',
@@ -40,7 +40,7 @@ const Login: React.FC<LoginProps> = ({ loginUser }) => {
     const handleChange = ({
         target: { name, value },
     }: ChangeEvent<HTMLInputElement>) => {
-        if (name === 'emailModal') setEmailModal(value)
+        if (name === 'emailModal') setEmailModal(value);
         else
             setForm({
                 ...form,

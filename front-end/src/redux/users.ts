@@ -11,10 +11,14 @@ export const removeUser: ActionCreator<Action> = () => ({
 });
 
 export const loginUser = (data: LoginFormProps) => {
+    const http =
+        +process.env.REACT_APP_SERVER_PORT! === 3001 ? 'http://' : 'https://';
+    const url = process.env.REACT_APP_SERVER_URL!;
+
     return async (dispatch: any) => {
         try {
             const token = await reqService.loginUser(
-                `https://${process.env.REACT_APP_SERVER_URL}/api/users/login`,
+                `${http}${url}/api/users/login`,
                 data
             );
 

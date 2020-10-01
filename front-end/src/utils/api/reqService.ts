@@ -25,6 +25,14 @@ async function resendEmail(url: string, data: {}) {
     return await apiRequestHelper<apiRequestHelperProps>('POST', url, data);
 }
 
+async function accessRoom(url: string) {
+    return await apiRequestHelper<apiRequestHelperProps>('GET', url);
+}
+
+async function joinRoom(url: string, data: {}) {
+    return await apiRequestHelper<apiRequestHelperProps>('POST', url, data);
+}
+
 async function createRoom(url: string, data: {}) {
     return await apiRequestHelper<apiRequestHelperProps>('POST', url, data);
 }
@@ -36,5 +44,7 @@ export default {
     loginUser,
     signUpUser,
     resendEmail,
+    accessRoom,
+    joinRoom,
     createRoom,
 };

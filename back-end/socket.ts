@@ -11,12 +11,17 @@ const io = require('socket.io')(http);
 
 try {
     io.on('connection', (socket) => {
+        console.log();
+        console.log('CONNECTED------------------', socket.id);
+
         socket.on(
             'join',
             async (
                 { user, roomId }: SocketJoinDisconnect,
                 callback: (msg?: string) => void
             ) => {
+                console.log();
+                console.log('JOIN-', user.firstName, socket.id);
                 try {
                     const userDoc = await User.findOne({ _id: user._id });
                     if (userDoc.roomId !== roomId)
@@ -32,7 +37,7 @@ try {
                         return callback('Sorry! Room not found!');
 
                     socket.join(room._id);
-
+                    console.log(room._id);
                     socket.to(room._id).broadcast.emit('user-connected', {
                         text: `${user.firstName} ${user.lastName} has joined the room!`,
                         userId: user._id,
@@ -69,6 +74,9 @@ try {
         socket.on('disconnect', async () => {
             let roomId;
             try {
+                console.log();
+                console.log('-------------------DISCONNECTED', socket.id);
+
                 const userDoc = await User.findOne({ socketId: socket.id });
                 if (!userDoc)
                     throw <ErrorType>{
