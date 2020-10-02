@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useState, useRef } from 'react';
 import { Nav, NavLink, LogoDiv } from './Header.styles';
 import { connect } from 'react-redux';
 import { HeaderProps } from '../../utils/types/types';
@@ -73,6 +73,8 @@ const Header: React.FC<HeaderProps> = ({ user, removeUser }) => {
             form.password.length > 1 && form.password === form.confirmPassword
         );
     };
+
+    joinModal && navigator.clipboard.writeText(`${location}join/${roomId}`);
 
     return (
         <Nav>

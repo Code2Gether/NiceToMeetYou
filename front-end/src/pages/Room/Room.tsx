@@ -36,11 +36,9 @@ const Room: React.FC<AppAndRoomProps> = ({ user }) => {
 
     const addVideoStream = useCallback(
         (video: HTMLVideoElement, stream: MediaStream) => {
-            console.log('addVideo');
             video.srcObject = stream;
             video.addEventListener('loadedmetadata', () => video.play());
             if (containerRef.current) {
-                console.log('containerRef');
                 containerRef.current!.appendChild(video);
             }
         },
@@ -60,6 +58,7 @@ const Room: React.FC<AppAndRoomProps> = ({ user }) => {
             );
 
             call.on('close', () => video.remove());
+
             peers[userId] = call;
         }
         console.log('peers', peers);
@@ -77,7 +76,7 @@ const Room: React.FC<AppAndRoomProps> = ({ user }) => {
             port: port,
             // secure
         });
-        console.log(socketRef.current);
+
         async function connect() {
             try {
                 const access = await roomService.accessRoom({ roomId });
@@ -92,6 +91,7 @@ const Room: React.FC<AppAndRoomProps> = ({ user }) => {
                         })
                         .then((stream) => {
                             addVideoStream(myVideo, stream);
+                            console.log(stream.getTracks());
                             myPeerRef.current!.on('call', (call) => {
                                 call.answer(stream);
                                 const video = document.createElement('video');
@@ -126,17 +126,39 @@ const Room: React.FC<AppAndRoomProps> = ({ user }) => {
                 }
             } catch (error) {
                 console.log(error);
+                history.push('/');
             }
             setLoading(false);
         }
         connect();
+        return () => {
+            // socketRef.current!.emit('disconnect');
+            // socketRef.current = null;
+            // myPeerRef.current = null;
+            console.log('component did unmounted');
+            socketRef.current?.close();
+            navigator.getUserMedia(
+                { audio: true, video: true },
+                function (stream) {
+                    // can also use getAudioTracks() or getVideoTracks()
+                    // var track = stream.getTracks()[0];  // if only one media track
+                    // ...
+                    console.log(stream.getTracks());
+                    // stream.getTracks()[0].stop();
+                    stream.getTracks().forEach((track) => track.stop());
+                    // stream.getAudioTracks()[0].stop();
+                    // stream.getVideoTracks()[0].stop();
+                },
+                function (error) {
+                    console.log('getUserMedia() error', error);
+                }
+            );
+        };
     }, []);
 
     useEffect(() => {
         myPeerRef.current!.on('open', () => {
-            console.log('opened');
             socketRef.current!.emit('join', { user, roomId });
-            console.log('emitido');
         });
     }, []);
 
